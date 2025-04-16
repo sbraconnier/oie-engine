@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="conf"/>
 	<classpathentry kind="src" path="dbconf"/>
 	<classpathentry kind="src" path="build"/>
+	<classpathentry kind="lib" path="lib/java-semver-0.10.2.jar"/>
 	<classpathentry kind="lib" path="lib/extensions/dimse/jai_imageio.jar"/>
 	<classpathentry kind="lib" path="lib/extensions/doc/flying-saucer-core-9.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/extensions/doc/flying-saucer-pdf-9.0.1.jar"/>

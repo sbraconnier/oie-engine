@@ -213,5 +213,6 @@
 	<classpathentry kind="lib" path="lib/libphonenumber-8.12.50.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool2-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="lib/java-semver-0.10.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
