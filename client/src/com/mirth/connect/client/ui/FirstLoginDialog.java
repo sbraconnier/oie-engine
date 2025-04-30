@@ -47,7 +47,7 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
         finishButton.setEnabled(false);
 
         userEditPanel.setUser(this, currentUser);
-        userEditPanel.setRequiredFields(true, true);
+        userEditPanel.setRequiredFields(false, true);
         if (currentUser.getId() == 1) {
             registerCheckBox.setVisible(false);
         }
@@ -316,7 +316,7 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
         	userConsentCheckBox.setSelected(false);
         	userConsentCheckBox.setEnabled(false);
         }
-        userEditPanel.setRequiredFields(allRequired, true);
+        userEditPanel.setRequiredFields(false, true);
     }//GEN-LAST:event_registerCheckBoxActionPerformed
     
     public boolean getResult() {
