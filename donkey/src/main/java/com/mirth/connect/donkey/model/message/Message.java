@@ -114,55 +114,62 @@ public class Message implements Serializable {
     }
 
     public ConnectorMessage getMergedConnectorMessage() {
-        if (mergedConnectorMessage == null) {
-            mergedConnectorMessage = new ConnectorMessage();
-            mergedConnectorMessage.setChannelId(channelId);
-            mergedConnectorMessage.setMessageId(messageId);
-            mergedConnectorMessage.setServerId(serverId);
-            mergedConnectorMessage.setReceivedDate(receivedDate);
 
-            Map<String, Object> sourceMap = null;
-            Map<String, Object> responseMap = new HashMap<String, Object>();
-            Map<String, Object> channelMap = new HashMap<String, Object>();
-
-            ConnectorMessage sourceConnectorMessage = connectorMessages.get(0);
-
-            if (sourceConnectorMessage != null) {
-                mergedConnectorMessage.setRaw(sourceConnectorMessage.getRaw());
-                mergedConnectorMessage.setProcessedRaw(sourceConnectorMessage.getProcessedRaw());
-                sourceMap = sourceConnectorMessage.getSourceMap();
-                responseMap.putAll(sourceConnectorMessage.getResponseMap());
-                channelMap.putAll(sourceConnectorMessage.getChannelMap());
-            }
-
-            List<ConnectorMessage> orderedConnectorMessages = new ArrayList<ConnectorMessage>(connectorMessages.values());
-            Collections.sort(orderedConnectorMessages, new Comparator<ConnectorMessage>() {
-                @Override
-                public int compare(ConnectorMessage m1, ConnectorMessage m2) {
-                    if (m1.getChainId() == m2.getChainId()) {
-                        return m1.getOrderId() - m2.getOrderId();
-                    } else {
-                        return m1.getChainId() - m2.getChainId();
-                    }
-                }
-            });
-
-            for (ConnectorMessage connectorMessage : orderedConnectorMessages) {
-                if (connectorMessage.getMetaDataId() > 0) {
-                    if (sourceMap == null) {
-                        sourceMap = connectorMessage.getSourceMap();
-                    }
-                    responseMap.putAll(connectorMessage.getResponseMap());
-                    channelMap.putAll(connectorMessage.getChannelMap());
-                }
-            }
-
-            mergedConnectorMessage.setSourceMap(sourceMap);
-            mergedConnectorMessage.setResponseMap(responseMap);
-            mergedConnectorMessage.setChannelMap(channelMap);
+        if (mergedConnectorMessage != null) {
+            return mergedConnectorMessage;
         }
 
-        return mergedConnectorMessage;
+        synchronized (this) {
+            if (mergedConnectorMessage == null) {
+                mergedConnectorMessage = new ConnectorMessage();
+                mergedConnectorMessage.setChannelId(channelId);
+                mergedConnectorMessage.setMessageId(messageId);
+                mergedConnectorMessage.setServerId(serverId);
+                mergedConnectorMessage.setReceivedDate(receivedDate);
+
+                Map<String, Object> sourceMap = null;
+                Map<String, Object> responseMap = new HashMap<String, Object>();
+                Map<String, Object> channelMap = new HashMap<String, Object>();
+
+                ConnectorMessage sourceConnectorMessage = connectorMessages.get(0);
+
+                if (sourceConnectorMessage != null) {
+                    mergedConnectorMessage.setRaw(sourceConnectorMessage.getRaw());
+                    mergedConnectorMessage.setProcessedRaw(sourceConnectorMessage.getProcessedRaw());
+                    sourceMap = sourceConnectorMessage.getSourceMap();
+                    responseMap.putAll(sourceConnectorMessage.getResponseMap());
+                    channelMap.putAll(sourceConnectorMessage.getChannelMap());
+                }
+
+                List<ConnectorMessage> orderedConnectorMessages = new ArrayList<ConnectorMessage>(connectorMessages.values());
+                Collections.sort(orderedConnectorMessages, new Comparator<ConnectorMessage>() {
+                    @Override
+                    public int compare(ConnectorMessage m1, ConnectorMessage m2) {
+                        if (m1.getChainId() == m2.getChainId()) {
+                            return m1.getOrderId() - m2.getOrderId();
+                        } else {
+                            return m1.getChainId() - m2.getChainId();
+                        }
+                    }
+                });
+
+                for (ConnectorMessage connectorMessage : orderedConnectorMessages) {
+                    if (connectorMessage.getMetaDataId() > 0) {
+                        if (sourceMap == null) {
+                            sourceMap = connectorMessage.getSourceMap();
+                        }
+                        responseMap.putAll(connectorMessage.getResponseMap());
+                        channelMap.putAll(connectorMessage.getChannelMap());
+                    }
+                }
+
+                mergedConnectorMessage.setSourceMap(sourceMap);
+                mergedConnectorMessage.setResponseMap(responseMap);
+                mergedConnectorMessage.setChannelMap(channelMap);
+            }
+
+            return mergedConnectorMessage;
+        }
     }
 
     public String toString() {
