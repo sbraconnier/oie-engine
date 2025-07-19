@@ -9,6 +9,7 @@
 
 package com.mirth.connect.donkey.util;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -131,5 +132,38 @@ public class MapUtil {
         }
 
         return map;
+    }
+
+    /**
+     * Tries to safely put all entries from a possibly concurrently modified source map into the
+     * target map. Retries up to the specified maxAttempts if ConcurrentModificationException is
+     * thrown, sleeping 10ms between retries.
+     *
+     * @param target
+     *            The destination map
+     * @param source
+     *            The source map that might be modified concurrently
+     * @param maxAttempts
+     *            The maximum number of retries
+     * @return true if the putAll succeeded, false if it failed after retries
+     */
+    public static <K, V> boolean safePutAll(Map<K, V> target, Map<K, V> source, final int maxAttempts) {
+
+        int attempts = 0;
+        while (attempts++ < maxAttempts) {
+            try {
+                target.putAll(source);
+                return true;
+            } catch (ConcurrentModificationException e) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 }

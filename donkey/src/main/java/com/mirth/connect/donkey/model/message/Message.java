@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mirth.connect.donkey.model.message.attachment.Attachment;
+import com.mirth.connect.donkey.util.MapUtil;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("message")
@@ -114,62 +116,55 @@ public class Message implements Serializable {
     }
 
     public ConnectorMessage getMergedConnectorMessage() {
+        if (mergedConnectorMessage == null) {
+            mergedConnectorMessage = new ConnectorMessage();
+            mergedConnectorMessage.setChannelId(channelId);
+            mergedConnectorMessage.setMessageId(messageId);
+            mergedConnectorMessage.setServerId(serverId);
+            mergedConnectorMessage.setReceivedDate(receivedDate);
 
-        if (mergedConnectorMessage != null) {
-            return mergedConnectorMessage;
-        }
+            Map<String, Object> sourceMap = null;
+            Map<String, Object> responseMap = new HashMap<String, Object>();
+            Map<String, Object> channelMap = new HashMap<String, Object>();
 
-        synchronized (this) {
-            if (mergedConnectorMessage == null) {
-                mergedConnectorMessage = new ConnectorMessage();
-                mergedConnectorMessage.setChannelId(channelId);
-                mergedConnectorMessage.setMessageId(messageId);
-                mergedConnectorMessage.setServerId(serverId);
-                mergedConnectorMessage.setReceivedDate(receivedDate);
+            ConnectorMessage sourceConnectorMessage = connectorMessages.get(0);
 
-                Map<String, Object> sourceMap = null;
-                Map<String, Object> responseMap = new HashMap<String, Object>();
-                Map<String, Object> channelMap = new HashMap<String, Object>();
-
-                ConnectorMessage sourceConnectorMessage = connectorMessages.get(0);
-
-                if (sourceConnectorMessage != null) {
-                    mergedConnectorMessage.setRaw(sourceConnectorMessage.getRaw());
-                    mergedConnectorMessage.setProcessedRaw(sourceConnectorMessage.getProcessedRaw());
-                    sourceMap = sourceConnectorMessage.getSourceMap();
-                    responseMap.putAll(sourceConnectorMessage.getResponseMap());
-                    channelMap.putAll(sourceConnectorMessage.getChannelMap());
-                }
-
-                List<ConnectorMessage> orderedConnectorMessages = new ArrayList<ConnectorMessage>(connectorMessages.values());
-                Collections.sort(orderedConnectorMessages, new Comparator<ConnectorMessage>() {
-                    @Override
-                    public int compare(ConnectorMessage m1, ConnectorMessage m2) {
-                        if (m1.getChainId() == m2.getChainId()) {
-                            return m1.getOrderId() - m2.getOrderId();
-                        } else {
-                            return m1.getChainId() - m2.getChainId();
-                        }
-                    }
-                });
-
-                for (ConnectorMessage connectorMessage : orderedConnectorMessages) {
-                    if (connectorMessage.getMetaDataId() > 0) {
-                        if (sourceMap == null) {
-                            sourceMap = connectorMessage.getSourceMap();
-                        }
-                        responseMap.putAll(connectorMessage.getResponseMap());
-                        channelMap.putAll(connectorMessage.getChannelMap());
-                    }
-                }
-
-                mergedConnectorMessage.setSourceMap(sourceMap);
-                mergedConnectorMessage.setResponseMap(responseMap);
-                mergedConnectorMessage.setChannelMap(channelMap);
+            if (sourceConnectorMessage != null) {
+                mergedConnectorMessage.setRaw(sourceConnectorMessage.getRaw());
+                mergedConnectorMessage.setProcessedRaw(sourceConnectorMessage.getProcessedRaw());
+                sourceMap = sourceConnectorMessage.getSourceMap();
+                responseMap.putAll(sourceConnectorMessage.getResponseMap());
+                channelMap.putAll(sourceConnectorMessage.getChannelMap());
             }
 
-            return mergedConnectorMessage;
+            List<ConnectorMessage> orderedConnectorMessages = new ArrayList<ConnectorMessage>(connectorMessages.values());
+            Collections.sort(orderedConnectorMessages, new Comparator<ConnectorMessage>() {
+                @Override
+                public int compare(ConnectorMessage m1, ConnectorMessage m2) {
+                    if (m1.getChainId() == m2.getChainId()) {
+                        return m1.getOrderId() - m2.getOrderId();
+                    } else {
+                        return m1.getChainId() - m2.getChainId();
+                    }
+                }
+            });
+
+            for (ConnectorMessage connectorMessage : orderedConnectorMessages) {
+                if (connectorMessage.getMetaDataId() > 0) {
+                    if (sourceMap == null) {
+                        sourceMap = connectorMessage.getSourceMap();
+                    }
+                    MapUtil.safePutAll(responseMap, connectorMessage.getResponseMap(), 5);
+                    MapUtil.safePutAll(channelMap, connectorMessage.getChannelMap(), 5);
+                }
+            }
+
+            mergedConnectorMessage.setSourceMap(sourceMap);
+            mergedConnectorMessage.setResponseMap(responseMap);
+            mergedConnectorMessage.setChannelMap(channelMap);
         }
+
+        return mergedConnectorMessage;
     }
 
     public String toString() {
