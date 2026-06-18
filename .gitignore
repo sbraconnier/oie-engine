@@ -107,8 +107,13 @@ Desktop.ini
 donkey/donkey-src
 donkey/donkey-test
 .sonar
+# Unit Tests:
 **/junit-reports
+**/junit-html
 **/code-coverage-reports
+/exports/
+/MapUtilTestDB/
+/testconf/
 
 # /client/
 /client/logs
@@ -401,38 +406,6 @@ donkey/donkey-test
 
 # /generator/templates/
 
-# /manager/
-/manager/.settings
-/manager/MANIFEST.MF
-/manager/bin
-/manager/build
-/manager/classes
-/manager/dist
-/manager/logs
-/manager/build.xml
-/manager/manifest.mf
-/manager/nbproject
-
-# /manager/lib/
-/manager/lib/donkey-model.jar
-/manager/lib/mirth-client-core.jar
-/manager/lib/mirth-crypto.jar
-/manager/lib/not-yet-commons-ssl-0.3.11.jar
-
-# /manager/src/
-
-# /manager/src/com/
-
-# /manager/src/com/mirth/
-
-# /manager/src/com/mirth/connect/
-
-# /manager/src/com/mirth/connect/manager/
-
-# /manager/src/com/mirth/connect/manager/components/
-
-# /manager/src/com/mirth/connect/manager/images/
-
 # /server/
 /server/mirthdb
 /server/logs
@@ -677,60 +650,3 @@ donkey/donkey-test
 # /server/src/org/mozilla/javascript/
 
 # /server/src/org/mozilla/javascript/xmlimpl/
-
-# /simplesender/
-/simplesender/.settings
-/simplesender/bin
-
-# /simplesender/lib/
-
-# /simplesender/samples/
-
-# /simplesender/src/
-
-# /simplesender/src/com/
-
-# /simplesender/src/com/mirth/
-
-# /simplesender/src/com/mirth/connect/
-
-# /simplesender/src/com/mirth/connect/simplereceiver/
-
-# /simplesender/src/com/mirth/connect/simplesender/
-
-# /webadmin/
-/webadmin/build
-/webadmin/dist
-
-# /webadmin/WebContent/
-
-# /webadmin/WebContent/WEB-INF/
-
-# /webadmin/WebContent/WEB-INF/jsp/
-
-# /webadmin/WebContent/WEB-INF/jsp/common/
-
-# /webadmin/WebContent/WEB-INF/lib/
-
-# /webadmin/WebContent/css/
-
-# /webadmin/WebContent/images/
-
-# /webadmin/WebContent/images/ludo-jquery-treetable/
-
-# /webadmin/WebContent/js/
-
-# /webadmin/src/
-
-# /webadmin/src/com/
-
-# /webadmin/src/com/mirth/
-
-# /webadmin/src/com/mirth/connect/
-
-# /webadmin/src/com/mirth/connect/webadmin/
-
-# /webadmin/src/com/mirth/connect/webadmin/action/
-
-# /webadmin/src/com/mirth/connect/webadmin/utils/
-

@@ -56,6 +56,7 @@ public class Alert {
         context.put("alertId", model.getId());
         context.put("alertName", model.getName());
         context.put("serverId", ConfigurationController.getInstance().getServerId());
+        context.put("serverName", ConfigurationController.getInstance().getServerName());
         context.put("date", new DateTool());
 
         return context;

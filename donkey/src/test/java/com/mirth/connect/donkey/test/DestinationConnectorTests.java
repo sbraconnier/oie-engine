@@ -328,7 +328,7 @@ public class DestinationConnectorTests {
 
                 if (retryCount > 0) {
                     // assert that the connector attempted to send the message the correct number of times
-                    assertEquals(new Integer(dispatcherConnectorProperties.getRetryCount() + 1), TestUtils.getSendAttempts(channel.getChannelId(), dispatchResult.getMessageId()));
+                    assertEquals(Integer.valueOf(dispatcherConnectorProperties.getRetryCount() + 1), TestUtils.getSendAttempts(channel.getChannelId(), dispatchResult.getMessageId()));
                 } else {
                     if (queueNull || !queueEnabled || queueSendFirst) {
                         // Assert that the sent content was stored

@@ -105,6 +105,7 @@ public class DefaultAlertEditPanel extends AlertEditPanel {
         variables.add("alertId");
         variables.add("alertName");
         variables.add("serverId");
+        variables.add("serverName");
         variables.add("globalMapVariable");
         variables.add("date");
 

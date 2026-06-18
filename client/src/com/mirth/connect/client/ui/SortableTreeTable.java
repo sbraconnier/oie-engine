@@ -1,11 +1,6 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
+// SPDX-FileCopyrightText: 2026 Tony Germano <tony@germano.name>
 
 package com.mirth.connect.client.ui;
 
@@ -133,6 +128,18 @@ public class SortableTreeTable extends JXTreeTable {
     @Override
     public void setSortOrder(int columnIndex, SortOrder sortOrder) {
         sortModel.setSortOptions(sortModel.getColumnName(columnIndex), order);
+    }
+
+    // This fixes a bug in the super implementation where isHierarchical(int) can be
+    // called when editingColumn has a value of -1, which causes an exception to be
+    // thrown.
+    @Override
+    public int getEditingRow() {
+        if (editingRow == -1 || editingColumn == -1 || isHierarchical(editingColumn)) {
+            return -1;
+        } else {
+            return editingRow;
+        }
     }
 
     // ======================================================= private methods

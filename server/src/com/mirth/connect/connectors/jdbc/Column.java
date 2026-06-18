@@ -91,7 +91,7 @@ public class Column implements Serializable {
         int hashCode = 1;
         hashCode = 31 * hashCode + (name == null ? 0 : name.hashCode());
         hashCode = 31 * hashCode + (type == null ? 0 : type.hashCode());
-        hashCode = 31 * hashCode + (new Integer(precision)).hashCode();
+        hashCode = 31 * hashCode + precision;
         return hashCode;
     }
 

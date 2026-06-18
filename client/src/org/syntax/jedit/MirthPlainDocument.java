@@ -75,7 +75,7 @@ public class MirthPlainDocument extends AbstractDocument {
 	 */
 	public MirthPlainDocument(Content c) {
 		super(c);
-		putProperty(tabSizeAttribute, new Integer(4));
+		putProperty(tabSizeAttribute, 4);
 		defaultRoot = createDefaultRoot();
 	}
 

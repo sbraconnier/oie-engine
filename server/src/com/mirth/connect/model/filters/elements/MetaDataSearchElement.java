@@ -1,11 +1,5 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
 
 package com.mirth.connect.model.filters.elements;
 
@@ -13,7 +7,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.mirth.connect.model.MetaDataSearchElementToStringStyle;
+import com.mirth.connect.model.SearchElementToStringStyle;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("metaDataSearchCriteria")
@@ -65,6 +59,6 @@ public class MetaDataSearchElement implements Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, MetaDataSearchElementToStringStyle.instance());
+        return ToStringBuilder.reflectionToString(this, SearchElementToStringStyle.instance());
     }
 }

@@ -23,6 +23,6 @@ public class MirthBlankableSpinner extends JSpinner {
 
     public Integer getIntegerValue() {
         Object value = getValue();
-        return (value == null || value.equals("")) ? null : new Integer(value.toString());
+        return (value == null || value.equals("")) ? null : Integer.valueOf(value.toString());
     }
 }

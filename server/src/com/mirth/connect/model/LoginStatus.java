@@ -1,11 +1,5 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
 
 package com.mirth.connect.model;
 
@@ -42,5 +36,9 @@ public class LoginStatus implements Serializable {
 
     public String getUpdatedUsername() {
         return updatedUsername;
+    }
+
+    public boolean isSuccess() {
+        return status == Status.SUCCESS || status == Status.SUCCESS_GRACE_PERIOD;
     }
 }

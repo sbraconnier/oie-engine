@@ -11,7 +11,6 @@ package com.mirth.connect.cli;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -42,8 +40,12 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -145,21 +147,34 @@ public class CommandLineInterface {
                 System.exit(0);
             }
 
-            Properties configDefaults = new Properties();
+            Parameters params = new Parameters();
+            // Read data from this file
+            File propertiesFile = new File(line.getOptionValue("c", "conf" + File.separator + "mirth-cli-config.properties"));
+            
+            FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                   new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+                .configure(params.fileBased()
+                .setFile(propertiesFile));
+
+            Configuration config = new BaseConfiguration();
             try {
-                configDefaults.load(new FileInputStream(line.getOptionValue("c", "conf" + File.separator + "mirth-cli-config.properties")));
-            } catch (IOException e) {
-                // Only error out if they tried to load the config
+                // Load properties using Apache Commons Configuration2. The resulting config
+                // instance supports variable interpolation, including environment variables
+                // using the ${env:VARIABLE_NAME} syntax (for example ${env:MC_SERVER_URL}).
+                config = builder.getConfiguration();
+            } catch (ConfigurationException cex) {
+                // loading of the configuration file failed
                 if (line.hasOption("c")) {
-                    error("We could not find the file: " + line.getOptionValue("c"), null);
+                    // An explicit configuration file was specified with -c; fail fast with a clear error
+                    error("Failed to load the configuration file specified with -c: " + line.getOptionValue("c"), cex);
                     System.exit(2);
                 }
             }
 
-            String server = line.getOptionValue("a", configDefaults.getProperty("address"));
-            String user = line.getOptionValue("u", configDefaults.getProperty("user"));
-            String password = line.getOptionValue("p", configDefaults.getProperty("password"));
-            String script = line.getOptionValue("s", configDefaults.getProperty("script"));
+            String server = line.getOptionValue("a", config.getString("address"));
+            String user = line.getOptionValue("u", config.getString("user"));
+            String password = line.getOptionValue("p", config.getString("password"));
+            String script = line.getOptionValue("s", config.getString("script"));
 
             if ((server != null) && (user != null) && (password != null)) {
                 runShell(server, user, password, script, line.hasOption("d"));

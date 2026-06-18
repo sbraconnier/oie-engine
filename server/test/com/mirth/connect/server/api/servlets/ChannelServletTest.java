@@ -197,7 +197,7 @@ public class ChannelServletTest extends ServletTestBase {
         ChannelExportData exportData = channel.getExportData();
         assertTrue(exportData.getMetadata().isEnabled());
         assertTrue(exportData.getMetadata().getPruningSettings().isArchiveEnabled());
-        assertEquals(new Integer(7), exportData.getMetadata().getPruningSettings().getPruneContentDays());
+        assertEquals(Integer.valueOf(7), exportData.getMetadata().getPruningSettings().getPruneContentDays());
 
         assertEquals(2, exportData.getChannelTags().size());
         assertTrue(exportData.getChannelTags().contains(new ChannelTag("tag1", "Tag 1", new HashSet<>(Arrays.asList(new String[] { CHANNEL_ID_1, CHANNEL_ID_2 })))));

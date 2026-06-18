@@ -10,14 +10,16 @@
 package com.mirth.connect.plugins.serverlog;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class ServerLogItem implements Serializable {
 
-    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    public static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(ZoneId.systemDefault());
 
     private String serverId;
     private Long id;
@@ -123,7 +125,7 @@ public class ServerLogItem implements Serializable {
     public String toString() {
         if (id != null) {
             StringBuilder builder = new StringBuilder();
-            builder.append('[').append(DATE_FORMAT.format(date)).append("]  ");
+            builder.append('[').append(DATE_FORMAT.format(date.toInstant())).append("]  ");
             builder.append(level);
             builder.append("  (").append(category);
             if (StringUtils.isNotBlank(lineNumber)) {

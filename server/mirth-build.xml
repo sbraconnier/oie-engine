@@ -25,15 +25,6 @@
 		</copy>
 	</target>
 	
-	<!-- WebAdmin -->
-	<target name="build-webadmin" depends="init">
-	<!-- 
-		<ant antfile="${webadmin}/build.xml" dir="${webadmin}" target="dist"/>
-		<copy file="${webadmin}/dist/webadmin.war" todir="${server.build}/webapps" />
-		<copy file="${webadmin}/dist/webadmin.war" todir="${server.setup}/webapps" />
-	-->
-	</target>
-	
 	<!-- Server extensions -->
 	<target name="build-server-extensions" depends="build-donkey">
 		<ant antfile="${server}/build.xml" dir="${server}" target="create-plugins" />
@@ -66,23 +57,6 @@
 		
 		<copy todir="${server.setup}/extensions">
 			<fileset dir="${client}/dist/extensions" />
-		</copy>
-	</target>
-
-	<!-- Manager -->
-	<target name="build-manager" depends="build-client">
-		<copy file="${donkey.setup}/donkey-model.jar" todir="${manager}/lib" />
-		<copy file="${server.setup}/server-lib/mirth-client-core.jar" todir="${manager}/lib" />
-		<copy file="${server.setup}/server-lib/mirth-crypto.jar" todir="${manager}/lib" />
-
-		<ant antfile="${manager}/ant-build.xml" dir="${manager}" target="build" />
-
-		<copy file="${manager}/dist/mirth-manager-launcher.jar" todir="${server.setup}" />
-
-		<copy todir="${server.setup}/manager-lib">
-			<fileset dir="${manager}/lib">
-				<exclude name="mirth-client.jar" />
-			</fileset>
 		</copy>
 	</target>
 
@@ -126,7 +100,7 @@
 		<antcall target="test-run" />
 	</target>
 
-	<target name="build" depends="build-manager, build-cli, build-webadmin">
+	<target name="build" depends="build-cli">
 		<ant antfile="${server}/build.xml" dir="${server}" target="create-setup">
 			<property name="version" value="${version}" />
 		</ant>
@@ -142,7 +116,7 @@
 		<antcall target="build-time-tests" />
 	</target>
 
-	<target name="dist" depends="build-manager, build-cli, build-webadmin">
+	<target name="dist" depends="build-cli">
 		<echo>Application version: ${version}</echo>
 
 		<ant antfile="${server}/build.xml" dir="${server}" target="create-dist">
@@ -174,23 +148,24 @@
 		</header>
 
 		<header headerFile="${server}/license-header.txt">
-			<fileset dir="${manager}" includes="**/*.java" excludes="src/com/mirth/connect/manager/BareBonesBrowserLaunch.java" />
-		</header>
-		
-		<header headerFile="${server}/license-header.txt">
 			<fileset dir="${donkey}" includes="**/*.java" />
-		</header>
-		
-		<header headerFile="${server}/license-header.txt">
-			<fileset dir="${webadmin}" includes="**/*.java" />
 		</header>
 	</target>
 
 	<target name="test-run" depends="init">
-		<ant antfile="${donkey}/build.xml" dir="${donkey}" target="test-run"/>
-		<ant antfile="${server}/build.xml" dir="${server}" target="test-run"/>
-		<ant antfile="${client}/ant-build.xml" dir="${client}" target="test-run"/>
-		<ant antfile="${cli}/build.xml" dir="${cli}" target="test-run"/>
+		<condition property="subproject.target" value="test-coverage" else="test-run">
+			<istrue value="${coverage}" />
+		</condition>
+
+		<echo message="--------------------------------------------------" />
+		<echo message="Running tests with target: ${subproject.target}" />
+		<echo message="(Pass -Dcoverage=true to enable JaCoCo coverage)" />
+		<echo message="--------------------------------------------------" />
+
+		<ant antfile="${donkey}/build.xml" dir="${donkey}" target="${subproject.target}"/>
+		<ant antfile="${server}/build.xml" dir="${server}" target="${subproject.target}"/>
+		<ant antfile="${client}/ant-build.xml" dir="${client}" target="${subproject.target}"/>
+		<ant antfile="${cli}/build.xml" dir="${cli}" target="${subproject.target}"/>
 	</target>
 
 	<target name="remove-classes" depends="init">
@@ -202,5 +177,12 @@
 	<!-- build custom extensions -->
 	<target name="build-custom" depends="init">
 		<ant antfile="custom-extensions.xml" target="build" />
+	</target>
+
+	<target name="clean-all" depends="init" >
+		<ant antfile="${donkey}/build.xml" dir="${donkey}" target="clean" />
+		<ant antfile="${client}/ant-build.xml" dir="${client}" target="clean" />
+		<ant antfile="${server}/build.xml" dir="${server}" target="clean" />
+		<ant antfile="${cli}/build.xml" dir="${cli}" target="clean" />
 	</target>
 </project>

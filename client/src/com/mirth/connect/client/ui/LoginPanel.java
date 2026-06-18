@@ -1,11 +1,6 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
+// SPDX-FileCopyrightText: 2025 Mitch Gaffigan and Tony Germano
 
 package com.mirth.connect.client.ui;
 
@@ -451,7 +446,7 @@ public class LoginPanel extends javax.swing.JFrame {
                     }
 
                     // If SUCCESS or SUCCESS_GRACE_PERIOD
-                    if ((loginStatus != null) && ((loginStatus.getStatus() == LoginStatus.Status.SUCCESS) || (loginStatus.getStatus() == LoginStatus.Status.SUCCESS_GRACE_PERIOD))) {
+                    if (loginStatus != null && loginStatus.isSuccess()) {
                         if (!handleSuccess(loginStatus)) {
                             LoginPanel.getInstance().setVisible(false);
                             LoginPanel.getInstance().initialize(PlatformUI.SERVER_URL, PlatformUI.CLIENT_VERSION, "", "");
@@ -469,7 +464,7 @@ public class LoginPanel extends javax.swing.JFrame {
 
                                 loginStatus = plugin.authenticate(LoginPanel.this, client, updatedUsername, loginStatus);
 
-                                if ((loginStatus != null) && ((loginStatus.getStatus() == LoginStatus.Status.SUCCESS) || (loginStatus.getStatus() == LoginStatus.Status.SUCCESS_GRACE_PERIOD))) {
+                                if (loginStatus != null && loginStatus.isSuccess()) {
                                     errorOccurred = false;
                                     if (!handleSuccess(loginStatus)) {
                                         LoginPanel.getInstance().setVisible(false);

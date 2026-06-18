@@ -1,4 +1,4 @@
-name: Build OpenIntegrationEngine
+name: Build Open Integration Engine
 
 on:
   push:
@@ -9,6 +9,16 @@ on:
       - main
 
 jobs:
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
+
   build:
     runs-on: ubuntu-latest
 
@@ -18,7 +28,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '8'
+          java-version: '17'
           java-package: 'jdk+fx'
           distribution: 'zulu'
 
@@ -30,7 +40,7 @@ jobs:
       - name: Build OIE (unsigned)
         if: github.ref != 'refs/heads/main'
         working-directory: server
-        run: ant -f mirth-build.xml -DdisableSigning=true
+        run: ant -f mirth-build.xml -DdisableSigning=true -Dcoverage=true
 
       - name: Package distribution
         run: tar czf openintegrationengine.tar.gz -C server/ setup --transform 's|^setup|openintegrationengine/|'
@@ -40,3 +50,19 @@ jobs:
         with:
           name: oie-build
           path: openintegrationengine.tar.gz
+
+      - name: Stage Test Results
+        if: (!cancelled())
+        run: |
+          mkdir -p aggregate-test-results
+          # Copy the directory structures
+          cp -r --parents */build/test-results aggregate-test-results/
+
+      - name: Upload Test Results
+        if: (!cancelled())
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Results
+          path: |
+            aggregate-test-results/**/*.xml
+

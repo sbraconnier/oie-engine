@@ -131,15 +131,19 @@ import com.mirth.connect.util.MirthSSLUtil;
 import com.mirth.connect.util.messagewriter.EncryptionType;
 import com.mirth.connect.util.messagewriter.MessageWriterOptions;
 
-public class Client implements UserServletInterface, ConfigurationServletInterface, ChannelServletInterface, ChannelGroupServletInterface, ChannelStatusServletInterface, ChannelStatisticsServletInterface, EngineServletInterface, MessageServletInterface, EventServletInterface, AlertServletInterface, CodeTemplateServletInterface, DatabaseTaskServletInterface, UsageServletInterface, ExtensionServletInterface {
+public class Client implements UserServletInterface, ConfigurationServletInterface, ChannelServletInterface,
+        ChannelGroupServletInterface, ChannelStatusServletInterface, ChannelStatisticsServletInterface,
+        EngineServletInterface, MessageServletInterface, EventServletInterface, AlertServletInterface,
+        CodeTemplateServletInterface, DatabaseTaskServletInterface, UsageServletInterface, ExtensionServletInterface,
+        AutoCloseable {
 
     public static final int MAX_QUERY_PARAM_COLLECTION_SIZE = 100;
 
-    private Logger logger = LogManager.getLogger(this.getClass());
-    private ServerConnection serverConnection;
-    private javax.ws.rs.client.Client client;
-    private URI api;
-    private AtomicBoolean closed = new AtomicBoolean(false);
+    private final Logger logger = LogManager.getLogger(this.getClass());
+    private final ServerConnection serverConnection;
+    private final javax.ws.rs.client.Client client;
+    private final URI api;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private InvocationHandlerRecorder recorder;
 
     /**
@@ -243,7 +247,7 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
         return getServlet(servletInterface, executeType, null);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"removal", "unchecked"})
     public <T> T getServlet(final Class<T> servletInterface, final ExecuteType executeType, final Map<String, List<String>> customHeaders) {
         return (T) Proxy.newProxyInstance(AccessController.doPrivileged(ReflectionHelper.getClassLoaderPA(servletInterface)), new Class[] {
                 servletInterface }, new InvocationHandler() {
@@ -312,9 +316,9 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
         this.recorder = recorder;
     }
 
+    @Override
     public void close() {
-        closed.set(true);
-        if (serverConnection != null) {
+        if (!closed.getAndSet(true)) {
             serverConnection.shutdown();
             client.close();
         }
@@ -2616,6 +2620,16 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
     @Override
     public boolean isExtensionEnabled(String extensionName) throws ClientException {
         return getServlet(ExtensionServletInterface.class).isExtensionEnabled(extensionName);
+    }
+
+    /**
+     * Returns the disabled extensions on the classpath.
+     * 
+     * @see ExtensionServletInterface#getDisabledExtensions
+     */
+    @Override
+    public Set<String> getDisabledExtensions() throws ClientException {
+        return getServlet(ExtensionServletInterface.class).getDisabledExtensions();
     }
 
     /**

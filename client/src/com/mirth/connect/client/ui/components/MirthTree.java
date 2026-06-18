@@ -46,6 +46,8 @@ import com.mirth.connect.donkey.model.message.SerializationType;
 
 public class MirthTree extends JXTree implements DropTargetListener {
 
+    private static final Pattern PARENT_PATTERN = Pattern.compile(" (\\(.*\\))");
+
     private Frame parent;
     private MyFilter mf;
     private FilterTreeModel ftm;
@@ -502,8 +504,7 @@ public class MirthTree extends JXTree implements DropTargetListener {
         // because we don't want to include the root node.
         while (node != null && node.getParent() != null) {
             String parentName = node.getValue();
-            Pattern pattern = Pattern.compile(" (\\(.*\\))");
-            Matcher matcher = pattern.matcher(parentName.toString());
+            Matcher matcher = PARENT_PATTERN.matcher(parentName.toString());
 
             if (serializationType.equals(SerializationType.JSON) && node.isArrayElement()) {
                 if (variable.length() != 0) {
@@ -566,8 +567,7 @@ public class MirthTree extends JXTree implements DropTargetListener {
         // because we don't want to include the root node.
         while (node != null && node.getParent() != null) {
             String parentName = node.getValue();
-            Pattern pattern = Pattern.compile(" (\\(.*\\))");
-            Matcher matcher = pattern.matcher(parentName.toString());
+            Matcher matcher = PARENT_PATTERN.matcher(parentName.toString());
 
             // Get the index of the parent about to be added.
             String parentIndex = "";

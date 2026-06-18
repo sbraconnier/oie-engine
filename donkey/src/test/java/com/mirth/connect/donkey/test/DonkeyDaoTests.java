@@ -1444,7 +1444,7 @@ public class DonkeyDaoTests {
 
             try {
                 dao = daoFactory.getDao();
-                assertEquals(maxId, new Long(dao.getMaxMessageId(channel.getChannelId())));
+                assertEquals(maxId, Long.valueOf(dao.getMaxMessageId(channel.getChannelId())));
             } finally {
                 TestUtils.close(dao);
             }
@@ -1468,7 +1468,7 @@ public class DonkeyDaoTests {
 
                 try {
                     dao = daoFactory.getDao();
-                    assertEquals(maxId, new Long(dao.getMaxMessageId(channel.getChannelId())));
+                    assertEquals(maxId, Long.valueOf(dao.getMaxMessageId(channel.getChannelId())));
                 } finally {
                     TestUtils.close(dao);
                 }

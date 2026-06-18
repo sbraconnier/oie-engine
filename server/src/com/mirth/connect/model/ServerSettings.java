@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("serverSettings")
 public class ServerSettings extends AbstractSettings implements Serializable, Auditable, Purgable {
 
-    public static final Color DEFAULT_COLOR = new Color(0x9EB1C9);
+    public static final Color DEFAULT_COLOR = new Color(0x2A75B2);
     public static final String DEFAULT_LOGIN_NOTIFICATION_ENABLED_VALUE = "0";
     public static final String DEFAULT_LOGIN_NOTIFICATION_MESSAGE_VALUE = "";
     public static final String DEFAULT_ADMINISTRATOR_AUTO_LOGOUT_INTERVAL_ENABLED_VALUE =  "0";
@@ -327,3 +327,4 @@ public class ServerSettings extends AbstractSettings implements Serializable, Au
         return purgedProperties;
     }
 }
+

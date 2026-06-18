@@ -1,16 +1,15 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
+// SPDX-FileCopyrightText: 2026 Tony Germano <tony@germano.name>
 
 package com.mirth.connect.model.filters.elements;
 
 import java.io.Serializable;
 import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.mirth.connect.model.ContentSearchElementToStringStyle;
 
 public class ContentSearchElement implements Serializable {
 
@@ -36,5 +35,10 @@ public class ContentSearchElement implements Serializable {
 
     public void setSearches(List<String> searches) {
         this.searches = searches;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ContentSearchElementToStringStyle.instance());
     }
 }

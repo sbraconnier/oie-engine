@@ -2935,6 +2935,15 @@ public class JdbcDao implements DonkeyDao {
             statement = connection.prepareStatement(querySource.getQuery("getMetaDataMapByMessageId", values));
             resultSet = statement.executeQuery();
 
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            int columnCount = resultSetMetaData.getColumnCount();
+            MetaDataColumnType[] columnTypes = new MetaDataColumnType[columnCount + 1];
+            String[] columnNames = new String[columnCount + 1];
+            for (int i = 1; i <= columnCount; i++) {
+                columnTypes[i] = MetaDataColumnType.fromSqlType(resultSetMetaData.getColumnType(i));
+                columnNames[i] = resultSetMetaData.getColumnName(i).toUpperCase();
+            }
+
             while (resultSet.next()) {
                 Long messageId = resultSet.getLong("message_id");
                 Integer metaDataId = resultSet.getInt("metadata_id");
@@ -2951,28 +2960,24 @@ public class JdbcDao implements DonkeyDao {
                     connectorMetaDataMap.put(metaDataId, metaDataMap);
                 }
 
-                ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-                int columnCount = resultSetMetaData.getColumnCount();
-
                 for (int i = 1; i <= columnCount; i++) {
-                    MetaDataColumnType metaDataColumnType = MetaDataColumnType.fromSqlType(resultSetMetaData.getColumnType(i));
                     Object value = null;
 
-                    switch (metaDataColumnType) {//@formatter:off
+                    switch (columnTypes[i]) {//@formatter:off
                         case STRING:
                             value = resultSet.getString(i);
                             if (encryptor != null && StringUtils.startsWith((String) value, Encryptor.HEADER_INDICATOR)) {
                                 try {
                                     value = encryptor.decrypt((String) value);
                                 } catch (Exception e) {
-                                    logger.debug("Unable to decrypt custom metadata column " + resultSetMetaData.getColumnName(i).toUpperCase() + " for channel " + channelId + ", messsage " + messageId + "-" + metaDataId, e);
+                                    logger.debug("Unable to decrypt custom metadata column " + columnNames[i] + " for channel " + channelId + ", messsage " + messageId + "-" + metaDataId, e);
                                 }
                             }
                             break;
                         case NUMBER: value = resultSet.getBigDecimal(i); break;
                         case BOOLEAN: value = resultSet.getBoolean(i); break;
                         case TIMESTAMP:
-                            
+
                             Timestamp timestamp = resultSet.getTimestamp(i);
                             if (timestamp != null) {
                                 value = Calendar.getInstance();
@@ -2983,7 +2988,7 @@ public class JdbcDao implements DonkeyDao {
                         default: throw new Exception("Unrecognized MetaDataColumnType");
                     } //@formatter:on
 
-                    metaDataMap.put(resultSetMetaData.getColumnName(i).toUpperCase(), value);
+                    metaDataMap.put(columnNames[i], value);
                 }
             }
 

@@ -58,7 +58,7 @@ public class DocumentSerializer {
             // When Saxon-B is on the classpath setting this attribute throws an
             // IllegalArgumentException.
             try {
-                factory.setAttribute("indent-number", new Integer(4));
+                factory.setAttribute("indent-number", 4);
             } catch (IllegalArgumentException ex) {
                 logger.warn("Could not set Document Serializer attribute: indent-number", ex);
             }

@@ -1,54 +1,57 @@
 
 
-Mirth Connect and Mirth Connect Command Line Interface include the following,
-which is distributed under the terms of the Apache License version 2.0 (see
-APACHE-LICENSE-2.0.txt):
+All libraries listed in this file are included with Open Integration Engine.
+Libraries also included with the Command Line Interface are marked [incl. CLI].
 
-	Amazon Ion Java [Mirth Connect only] (https://github.com/amzn/ion-java)
-	Apache Commons
-	Apache Derby 10.10.1.1 [Mirth Connect only]
-	Apache Geronimo (only components needed for the JMS API) [Mirth Connect only]
-	Apache HttpComponents 4.x
-	Apache Log4j 1.2.16
-	Apache PDFBox 1.8.4 [Mirth Connect only]
-	Apache Standard Taglib 1.2.1 [Mirth Connect only]
-	Apache Tomcat Jasper JSP Engine 8.5.70 [Mirth Connect only]
-	Apache Tomcat Jasper Expression Language Impl 8.5.70 [Mirth Connect only]
-	Apache Velocity Engine 2.2
-	Apache Velocity Tools 3.0
-	AWS SDK v2 for Java [Mirth Connect only] (https://github.com/aws/aws-sdk-java-v2)
+
+The following are distributed under the terms of the Apache License version 2.0
+(see APACHE-LICENSE-2.0.txt):
+
+	Amazon Ion Java (https://github.com/amzn/ion-java)
+	Apache Commons [incl. CLI]
+	Apache Derby 10.10.2.0
+	Apache Geronimo (only components needed for the JMS API)
+	Apache HttpComponents 4.x [incl. CLI]
+	Apache Log4j 2.25.3 [incl. CLI]
+	Apache PDFBox 2.0.24
+	Apache Standard Taglib 1.2.5
+	Apache Tomcat Jasper JSP Engine 8.5.70
+	Apache Tomcat Jasper Expression Language Impl 8.5.70
+	Apache Velocity Engine 2.3 [incl. CLI]
+	Apache Velocity Tools 3.1 [incl. CLI]
+	AWS SDK v2 for Java (https://github.com/aws/aws-sdk-java-v2)
 	Bean Validation API 1.1.0 (http://beanvalidation.org/)
-	Error Prone Annotations 2.3.4 [Mirth Connect only] (https://github.com/google/error-prone)
-	Fast Infoset Project 1.2.13 [Mirth Connect only] (https://github.com/javaee/metro-fi/tree/fastinfoset-project-1.2.13)
-	Google Code libphonenumber [Mirth Connect only] (https://github.com/google/libphonenumber)
-	Google Code Prettify [Mirth Connect only] (https://github.com/google/code-prettify)
-	Guava 28.2 (https://code.google.com/p/guava-libraries)
+	Error Prone Annotations 2.3.4 (https://github.com/google/error-prone)
+	Fast Infoset Project 1.2.13 (https://github.com/javaee/metro-fi/tree/fastinfoset-project-1.2.13)
+	Google Code libphonenumber (https://github.com/google/libphonenumber)
+	Google Code Prettify (https://github.com/google/code-prettify)
+	Guava 32.0.1 [incl. CLI] (https://github.com/google/guava)
 	Guice 4.1 (https://github.com/google/guice)
-	HikariCP 2.3.2 [Mirth Connect only]
-	J2ObjC Annotations 1.3 [Mirth Connect only] (https://github.com/google/j2objc/)
-	Jackson Project (https://github.com/FasterXML/jackson)
-	Java Native Access (JNA) 4.5.2 [Mirth Connect only] (https://github.com/java-native-access/jna)
-	Jetty 9.4.53 [Mirth Connect only]
-	Joda-Time 2.2 [Mirth Connect only]
-	JSR305 Annotations for Findbugs 3.0.2 [Mirth Connect only] (http://findbugs.sourceforge.net/)
-	MyBatis 3.1.1 [Mirth Connect only]
-	Netty 4.1.41 [Mirth Connect only]
+	HikariCP 2.5.1
+	J2ObjC Annotations 1.3 (https://github.com/google/j2objc/)
+	Jackson Project [incl. CLI] (https://github.com/FasterXML/jackson)
+	Java Native Access (JNA) 4.5.2 (https://github.com/java-native-access/jna)
+	Jetty 9.4.57
+	Joda-Time 2.9.9
+	JSR305 Annotations for Findbugs 3.0.2 (http://findbugs.sourceforge.net/)
+	MyBatis 3.1.1
+	Netty 4.1.119
 	Not-Going-To-Be-Commons-SSL 0.3.18
-	Quartz Scheduler 2.3.2 [Mirth Connect only]
-	SQLite JDBC Driver 3.43.2.1 [Mirth Connect only] (https://github.com/xerial/sqlite-jdbc)
-	StAXON 1.3 [Mirth Connect only] (https://github.com/beckchr/staxon)
-	Swagger Core 2.0.10 (https://github.com/swagger-api/swagger-core)
+	Quartz Scheduler 2.3.2
+	SQLite JDBC Driver 3.43.2.1 (https://github.com/xerial/sqlite-jdbc)
+	StAXON 1.3 [incl. CLI] (https://github.com/beckchr/staxon)
+	Swagger Core 2.0.10 [incl. CLI] (https://github.com/swagger-api/swagger-core)
 	Swagger UI 2.2.10 (http://swagger.io/swagger-ui/)
-	webdavclient4j 0.92 [Mirth Connect only] (http://sourceforge.net/projects/webdavclient4j/)
+	webdavclient4j 0.92 (http://sourceforge.net/projects/webdavclient4j/)
 	Zip4j 1.3.3 (http://www.lingala.net/zip4j/)
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes modified versions of files from Zip4j, which is
-distributed under the terms of the Apache License version 2.0 
-(see APACHE-LICENSE-2.0.txt). The following files have changed:
+Modified versions of files from Zip4j are distributed under the terms of the
+Apache License version 2.0 (see APACHE-LICENSE-2.0.txt). The following files
+have changed:
 
 	net/lingala/zip4j/unzip/Unzip.java
 	net/lingala/zip4j/unzip/UnzipEngine.java
@@ -59,9 +62,9 @@ distributed under the terms of the Apache License version 2.0
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the MPL version 1.1 (see MPL-1.1.txt). The source code is also available under
-the same license terms.
+The following are distributed under the terms of the MPL version 1.1
+(see MPL-1.1.txt). The source code is also available under the same license
+terms.
 
 	dcm4che 2.0.29 (source code can be downloaded at: http://www.dcm4che.org/)
 	DcmRcv and DcmSnd were modified to allow overriding of the network
@@ -75,19 +78,19 @@ the same license terms.
 	http://search.maven.org/remotecontent?filepath=com/lowagie/itext/2.1.7/itext
 	-2.1.7-sources.jar)
 
-	Javassist 3.26.0 (source code can be downloaded at: 
+	Javassist 3.26.0 [incl. CLI] (source code can be downloaded at:
 	http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/)
 
 	
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the MPL version 2.0 (see MPL-2.0.txt). The source code is also available under
-the same license terms.
+The following are distributed under the terms of the MPL version 2.0
+(see MPL-2.0.txt). The source code is also available under the same license
+terms.
 
-	Mozilla Rhino 1.7.13 (source code can be downloaded at:
-	https://developer.mozilla.org/en-US/docs/Rhino)
+	Mozilla Rhino 1.7.13 [incl. CLI] (source code can be downloaded at:
+	https://github.com/mozilla/rhino)
 	This library was modified to fix some issues in XML processing, and to make
 	the debugger easier to implement.
 
@@ -95,8 +98,8 @@ the same license terms.
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Common Development and Distribution License version 1.1 (see CDDL-1.1.txt):
+The following are distributed under the terms of the Common Development and
+Distribution License version 1.1 (see CDDL-1.1.txt):
 
 	AOP Alliance Repackaged 2.4.0 (source code can be downloaded from:
 	https://sourceforge.net/projects/aopalliance/)
@@ -113,7 +116,7 @@ the Common Development and Distribution License version 1.1 (see CDDL-1.1.txt):
 	GlassFish MBean Annotation Library 3.1.0.b001 (source code can be downloaded
 	from: https://github.com/javaee/gmbal/tree/VERSION-3.1.0-b001)
 
-	HK2 2.4.0 (source code can be downloaded from:
+	HK2 2.4.0 [incl. CLI] (source code can be downloaded from:
 	https://hk2.java.net/2.4.0-b34/)
 	
 	IStack Commons Runtime 3.0.6 (source code can be downloaded from: 
@@ -129,22 +132,19 @@ the Common Development and Distribution License version 1.1 (see CDDL-1.1.txt):
 	Java Persistence API 1.0 (source code can be downloaded from:
 	https://glassfish.java.net/downloads/persistence/JavaPersistence.html)
 	
-	Java XML Bind API 2.4.0-b180725.0427 (source code can be
+	Java XML Bind API 2.4.0-b180725.0427 [incl. CLI] (source code can be
 	downloaded from: https://github.com/javaee/jaxb-spec/tree
 	/2.4.0-b180725.0427/jaxb-api)
-	
-	Java XML Bind Runtime 2.4.0-b180725.0644 (source code can be
+
+	Java XML Bind Runtime 2.4.0-b180725.0644 [incl. CLI] (source code can be
 	downloaded from: https://github.com/javaee/jaxb-v2/tree
 	/2.4.0-b180725.0644/jaxb-ri)
-	
-	JavaBeans Activation Framework API 1.2.0 (source code can be downloaded
-	from: https://github.com/javaee/activation/tree/JAF-1_2_0)
 	
 	JAXB TXW Runtime 2.4.0-b180725.0427 (source code can be downloaded from:
 	https://github.com/javaee/jaxb-v2/tree/master/jaxb-ri/txw)
 	
-	Jersey RESTful Web Services framework 2.22.1 (source code can be downloaded
-	from: https://jersey.java.net/)
+	Jersey RESTful Web Services framework 2.22.1 [incl. CLI] (source code can be
+	downloaded from: https://jersey.java.net/)
 	The WebResourceFactory class was modified to open visibility on methods so
 	that it could be overridden.
 	
@@ -154,7 +154,7 @@ the Common Development and Distribution License version 1.1 (see CDDL-1.1.txt):
 	JSR 374 JSON Processing Default Provider 1.0.4 (source code can be downloaded
 	from: https://jsonp.java.net/)
 
-	Mimepull 1.9.7 (source code can be downloaded from:
+	Mimepull 1.9.7 [incl. CLI] (source code can be downloaded from:
 	https://mimepull.java.net/)
 	
 	SOAP with Attachment API for Java 1.4.0 (source code can be downloaded from:
@@ -173,24 +173,20 @@ the Common Development and Distribution License version 1.1 (see CDDL-1.1.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Common Development and Distribution License version 1.0 (see CDDL-1.0.txt):
-
-	JavaMail API 1.5.0 (source code can be downloaded from:
-	http://search.maven.org/remotecontent?filepath=com/sun/mail/javax.mail/1.5.0
-	/javax.mail-1.5.0-sources.jar)
+The following are distributed under the terms of the Common Development and
+Distribution License version 1.0 (see CDDL-1.0.txt):
 
 	Java Servlet API 3.1.0 (source code can be downloaded from: https://java.net
 	/projects/glassfish/sources/svn/show/tags/javax.servlet-api-3.1.0)
 	
-	Jetty Apache JSP Implementation 9.4.53 (source code can be downloaded from:
+	Jetty Apache JSP Implementation 9.4.57 (source code can be downloaded from:
 	http://download.eclipse.org/jetty/)
 
 	Swinglabs Wizard (source code can be downloaded from:
 	https://java.net/projects/wizard)
 	
-	Java Common Annotations API 1.3 (source code can be downloaded from: 
-	https://github.com/javaee/javax.annotation/tree/1.3)
+	Java Common Annotations API 1.3 [incl. CLI] (source code can be downloaded
+	from: https://github.com/javaee/javax.annotation/tree/1.3)
 	
 	OSGi Resource Locator 1.0.1 (source code can be downloaded from:
 	https://github.com/eclipse-ee4j/glassfish-hk2-extra/tree/master/
@@ -203,18 +199,32 @@ the Common Development and Distribution License version 1.0 (see CDDL-1.0.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Eclipse Public License version 2.0 (see EPL-2.0.txt):
+The following are distributed under the terms of the Eclipse Public License
+version 2.0 (see EPL-2.0.txt):
 
 	Eclipse Compiler For Java 3.19.0 (source code can be downloaded from:
 	http://www.eclipse.org/jdt)
+
+	Jakarta Mail API 1.6.7 (source code can be downloaded from:
+	https://github.com/eclipse-ee4j/mail/tree/1.6.7)
+	Also available under GPLv2 with Classpath Exception (see GPLv2+CE.txt).
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Creative Commons Zero License version 1.0 (see CC0-1.0.txt):
+The following are distributed under the terms of the Eclipse Distribution
+License version 1.0 (see EDL-1.0.txt):
+
+	JavaBeans Activation Framework 1.2.1 [incl. CLI] (source code can be downloaded
+	from: https://github.com/eclipse-ee4j/jaf/tree/1.2.1)
+
+
+--------------------------------------------------------------------------------
+
+
+The following are distributed under the terms of the Creative Commons Zero
+License version 1.0 (see CC0-1.0.txt):
 
 	Backport-util-concurrent API 3.1 (source code can be downloaded from:
 	https://backport-jsr166.sourceforge.net/)
@@ -223,7 +233,7 @@ the Creative Commons Zero License version 1.0 (see CC0-1.0.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is released into public domain:
+The following are released into public domain:
 
 	ImageJ (source code can be downloaded from:
 	https://imagej.net/ij/download.html)
@@ -232,8 +242,8 @@ Mirth Connect includes the following, which is released into public domain:
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Common Public License version 1.0 (see CPL-1.0.txt):
+The following are distributed under the terms of the Common Public License
+version 1.0 (see CPL-1.0.txt):
 
 	Web Services Description Language for Java Toolkit (WSDL4J) (source code can
 	be downloaded from: http://wsdl4j.sourceforge.net/)
@@ -242,8 +252,8 @@ the Common Public License version 1.0 (see CPL-1.0.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the Artistic License version 1.0 (see ARTISTIC-LICENSE-1.0.txt):
+The following are distributed under the terms of the Artistic License
+version 1.0 (see ARTISTIC-LICENSE-1.0.txt):
 
 	Display tag library (displaytag.org)
 	
@@ -251,8 +261,8 @@ the Artistic License version 1.0 (see ARTISTIC-LICENSE-1.0.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following, which is distributed under the terms of
-the OSGi Specification License, Version 1.0 (see OSGi-1.0.txt):
+The following are distributed under the terms of the OSGi Specification
+License, Version 1.0 (see OSGi-1.0.txt):
 
 	OSGi Core Release 4.2.0 (source code can be downloaded from:
 	https://www.osgi.org/release-4-version-4-2/)
@@ -261,28 +271,25 @@ the OSGi Specification License, Version 1.0 (see OSGi-1.0.txt):
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the following software:
-
-	Eclipse Java Development Tools 3.19.0
+Eclipse Java Development Tools 3.19.0
 
 Licensing information for this software can be found in the about.html file
 contained within the org.eclipse.jdt.ecj-3.19.0.jar file. This file
-can be found within the Mirth Connect installation folder at:
+can be found within the installation folder at:
 
-	[Mirth Connect Install Folder]/server-lib/jetty/jsp/
+	[Install Folder]/server-lib/jetty/jsp/
 
-Or in the Mirth Connect source code distribution, it can be found at:
+Or in the source code distribution, it can be found at:
 
-	[Mirth Connect Server Source Folder]/lib/jetty/jsp/
+	[Server Source Folder]/lib/jetty/jsp/
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the jTDS JDBC driver version 1.3.1. This library and its
-use are covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source
-code is available at http://jtds.sourceforge.net/. The following file has
-been changed:
+The jTDS JDBC driver version 1.3.1 is covered by the LGPL version 2.1 (see
+LGPL-2.1.txt). The library source code is available at
+http://jtds.sourceforge.net/. The following file has been changed:
 
 	net/sourceforge/jtds/ssl/TdsTlsOutputStream.java
 	
@@ -294,59 +301,56 @@ been changed:
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the MySQL Connector/J JDBC Driver version 8.2.0. This 
-library and its use are covered by the GPL version 2 with Oracle's Free and 
-Open Source Software ("FOSS") License Exception (see 
-MYSQL-CONNECTOR-LICENSE.txt). The library source code is available at 
-http://mirrors.ibiblio.org/maven2/mysql/mysql-connector-j/8.2.0/src/.
+The MySQL Connector/J JDBC Driver version 8.4.0 is covered by the GPL
+version 2 with Oracle's Free and Open Source Software ("FOSS") License
+Exception (see MYSQL-CONNECTOR-LICENSE.txt). The library source code is
+available at http://mirrors.ibiblio.org/maven2/mysql/mysql-connector-j/8.4.0/src/.
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the jcifs-ng SMB client library in Java version 2.1.10. This
-library and its use are covered by the LGPL version 2.1 (see LGPL-2.1.txt). The
-library source code is available at https://github.com/AgNO3/jcifs-ng/.
+The jcifs-ng SMB client library in Java version 2.1.10 is covered by the
+LGPL version 2.1 (see LGPL-2.1.txt). The library source code is available at
+https://github.com/AgNO3/jcifs-ng/.
 	
 	
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the Pdf-renderer library ([Mirth Connect Install
-Folder]/extensions/pdfviewer/lib/PDFRenderer.jar). This library and its use are
-covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source code is
-available at https://java.net/projects/pdf-renderer/.
+The Pdf-renderer library ([Install Folder]/extensions/pdfviewer/lib/PDFRenderer.jar)
+is covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source code
+is available at https://java.net/projects/pdf-renderer/.
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes javaparser version 1.0.8. This library and its use are
-covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source code is
-available at https://code.google.com/p/javaparser/.
+javaparser version 1.0.8 is covered by the LGPL version 2.1 (see
+LGPL-2.1.txt). The library source code is available at
+https://code.google.com/p/javaparser/.
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes SwingLabs SwingX version 1.6.2. This library and its
-use are covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source
-code is available at https://swingx.java.net/.
+SwingLabs SwingX version 1.6.2 is covered by the LGPL version 2.1 (see
+LGPL-2.1.txt). The library source code is available at
+https://swingx.java.net/.
 
 
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes openhtmltopdf version 1.0.9. This library and its use
-are covered by the LGPL version 2.1 (see LGPL-2.1.txt). The library source code
-is available at https://github.com/danfickle/openhtmltopdf/.
+openhtmltopdf version 1.0.9 is covered by the LGPL version 2.1 (see
+LGPL-2.1.txt). The library source code is available at
+https://github.com/danfickle/openhtmltopdf/.
 
 
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the jQuery JavaScript library, which is included
-with Mirth Connect.
+The license below pertains to the jQuery JavaScript library.
 
 =================== Beginning of License Information ===================
 
@@ -378,7 +382,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to Bootstrap, which is included with Mirth Connect.
+The license below pertains to Bootstrap.
 
 =================== Beginning of License Information ===================
 
@@ -408,8 +412,7 @@ THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the bootstrap-tokenfield library, which is
-included with Mirth Connect.
+The license below pertains to the bootstrap-tokenfield library.
 
 =================== Beginning of License Information ===================
 
@@ -440,9 +443,9 @@ THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license information below pertains to Flying Saucer version 9.0.1, which is
-included with Mirth Connect. This library and its use are covered by the LGPL
-version 2.1 (see LGPL-2.1.txt) and its source code is available at
+The license information below pertains to Flying Saucer version 9.0.1. This
+library is covered by the LGPL version 2.1 (see LGPL-2.1.txt) and its source
+code is available at
 https://github.com/flyingsaucerproject/flyingsaucer or
 https://code.google.com/p/flying-saucer/.
 
@@ -521,24 +524,13 @@ License: LGPL (dual-license with SPL)
 Use version 2.x as Xilize has a dependency on it; used only to produce 
 documentation.
 
-XML-APIs (extracted from Apache Xerces-2)
-http://xerces.apache.org/xerces2-j/
-License: Apache v2
-We include the xml-apis.jar from the Xerces binary distribution in order to allow
-our code to compile on JDK 1.4, which does not include newer XML APIs, even though
-these API implementations will run on version 1.4 of the JRE. The JAR is unmodified
-from the Xerces release, but is renamed as xml-apis-xerces-2.9.1.jar to
-make the version clear.
-Included as lib/xml-apis-xerces-2.9.1.jar
-
 =================== End of License Information ===================
 
 
 --------------------------------------------------------------------------------
 
 
-The license below pertains to Bouncy Castle Crypto, which is included with Mirth
-Connect and Mirth Connect Command Line Interface.
+The license below pertains to Bouncy Castle Crypto [incl. CLI].
 
 =================== Beginning of License ===================
 
@@ -568,8 +560,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to MigLayout version 4.2, which is included with
-Mirth Connect.
+The license below pertains to MigLayout version 4.2.
 
 =================== Beginning of License ===================
 
@@ -607,8 +598,7 @@ Mirth Connect.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to JDOM2 version 2.0.6.1, which is included with Mirth
-Connect.
+The license below pertains to JDOM2 version 2.0.6.1.
 
 =================== Beginning of License ===================
 
@@ -673,8 +663,7 @@ Connect.
 
 
 The license below pertains to MXP1: Xml Pull Parser 3rd Edition (XPP3) version
-1.1.4c, which is included with Mirth Connect and Mirth Connect Command Line
-Interface.
+1.1.4c [incl. CLI].
 
 =================== Beginning of License ===================
 
@@ -732,7 +721,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 The license below pertains to OGNL (Object-Graph Navigation Language), which is
-included with Mirth Connect within the MyBatis 3.1.1 library.
+included within the MyBatis 3.1.1 library.
 
 =================== Beginning of License ===================
 
@@ -773,7 +762,7 @@ included with Mirth Connect within the MyBatis 3.1.1 library.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the PostgreSQL JDBC Driver version 9.4 build 1200, which is included with Mirth Connect.
+The license below pertains to the PostgreSQL JDBC Driver version 42.7.8.
 
 =================== Beginning of License ===================
 
@@ -810,8 +799,7 @@ POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to XStream version 1.4.4, which is included with
-Mirth Connect and Mirth Connect Command Line Interface.
+The license below pertains to XStream version 1.4.20 [incl. CLI].
 
 =================== Beginning of License ===================
 
@@ -851,7 +839,7 @@ DAMAGE.
 
 
 The license below pertains to Simple Logging Facade for Java (SLF4J) version
-1.7.28, which is included with Mirth Connect.
+1.7.30 [incl. CLI].
 
 =================== Beginning of License ===================
 
@@ -883,76 +871,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to Apache Xerces2 Java (Build Tools) version 2.9.1,
-which is included with Mirth Connect.
-
-=================== Beginning of License ===================
-
-/*
- * The Apache Software License, Version 1.1
- *
- *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
- * reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
- *
- * 4. The names "Xerces" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation and was
- * originally based on software copyright (c) 1999, International
- * Business Machines, Inc., http://www.ibm.com.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- */
-
-=================== End of License =========================
-
-
---------------------------------------------------------------------------------
-
-
-The license below pertains to Jsch version 0.2.13, which is included with Mirth
-Connect.
+The license below pertains to Jsch version 2.27.7.
 
 =================== Beginning of License ===================
 
@@ -993,7 +912,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to JUnit 4.8.1, which is included with Mirth Connect.
+The license below pertains to JUnit 4.8.1.
 
 =================== Beginning of License ===================
 
@@ -1031,8 +950,7 @@ DAMAGE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to JGoodies Looks version 2.3.1, which is included
-with Mirth Connect.
+The license below pertains to JGoodies Looks version 2.3.1.
 
 =================== Beginning of License ===================
 
@@ -1074,8 +992,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 The license below pertains to a portion of the software included with Mozilla
-Rhino 1.7.13 (most of the classes in the
-org.mozilla.javascript.v8dtoa package), which is included with Mirth Connect.
+Rhino 1.7.13 [incl. CLI] (most of the classes in the
+org.mozilla.javascript.v8dtoa package).
 
 =================== Beginning of License ===================
 
@@ -1113,8 +1031,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 The license below pertains to a portion of the software included with Mozilla
-Rhino 1.7.13 (the org.mozilla.javascript.DToA class), which is
-included with Mirth Connect.
+Rhino 1.7.13 [incl. CLI] (the org.mozilla.javascript.DToA class).
 
 =================== Beginning of License ===================
 
@@ -1144,9 +1061,8 @@ included with Mirth Connect.
 
 
 The license below pertains to a portion of the software included with Mozilla
-Rhino 1.7.13 (the classes in the
-org.mozilla.javascript.tools.debugger.treetable package), which is included with
-Mirth Connect.
+Rhino 1.7.13 [incl. CLI] (the classes in the
+org.mozilla.javascript.tools.debugger.treetable package).
 
 =================== Beginning of License ===================
 
@@ -1186,7 +1102,7 @@ Mirth Connect.
 
 
 The license below pertains to a portion of the software included with the SQLite
-JDBC Driver 3.43.2.1, which is included with Mirth Connect.
+JDBC Driver 3.43.2.1.
 
 =================== Beginning of License ===================
 
@@ -1221,7 +1137,7 @@ SUCH DAMAGE.
 
 
 The license below pertains to a portion of the software included with
-RSyntaxTextArea, which is included with Mirth Connect. This library was modified
+RSyntaxTextArea. This library was modified
 to allow easier class overriding.
 
 =================== Beginning of License ===================
@@ -1257,8 +1173,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to a portion of the software included with ASM, which
-is included with Mirth Connect.
+The license below pertains to a portion of the software included with ASM.
 
 =================== Beginning of License ===================
 
@@ -1297,8 +1212,7 @@ is included with Mirth Connect.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to JS Beautifier 1.6.8, which is included with Mirth
-Connect.
+The license below pertains to JS Beautifier 1.15.3.
 
 =================== Beginning of License Information ===================
 
@@ -1332,9 +1246,9 @@ SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes unmodified libraries from OpenJFX, which is licensed 
-under the GNU General Public License version 2, with the Classpath Exception.
-A copy of this license is available in the file named GPLv2+CE.txt.
+Unmodified libraries from OpenJFX are licensed under the GNU General Public
+License version 2, with the Classpath Exception. A copy of this license is
+available in the file named GPLv2+CE.txt.
 
 The source code for OpenJFX is available at: http://jdk.java.net/openjfx/
 
@@ -1342,9 +1256,8 @@ The source code for OpenJFX is available at: http://jdk.java.net/openjfx/
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the OSHI library, which is licensed under the Eclipse 
-Public License version 1.0. A copy of this license is available in the file
-named EPL-1.0.txt.
+The OSHI library is licensed under the Eclipse Public License version 1.0. A
+copy of this license is available in the file named EPL-1.0.txt.
 
 The source code for OSHI is available at: https://github.com/oshi/oshi
 
@@ -1352,9 +1265,9 @@ The source code for OSHI is available at: https://github.com/oshi/oshi
 --------------------------------------------------------------------------------
 
 
-Mirth Connect includes the JaCoCo Java Code Coverage Library version 0.8.2,
-which is licensed under the Eclipse Public License version 1.0. A copy of this
-license is available in the file named EPL-1.0.txt.
+The JaCoCo Java Code Coverage Library version 0.8.2 is licensed under the
+Eclipse Public License version 1.0. A copy of this license is available in the
+file named EPL-1.0.txt.
 
 The source code for the JaCoCo Java Code Coverage Library is available at
 https://github.com/jacoco/jacoco/.
@@ -1363,8 +1276,7 @@ https://github.com/jacoco/jacoco/.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the args4j library, which is
-included with Mirth Connect.
+The license below pertains to the args4j library.
 
 =================== Beginning of License Information ===================
 
@@ -1395,8 +1307,7 @@ THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the Checker Qual annotations library, which is
-included with Mirth Connect.
+The license below pertains to the Checker Qual annotations library.
 
 =================== Beginning of License Information ===================
 
@@ -1427,8 +1338,7 @@ THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the Microsoft JDBC Driver for SQL Server, which is
-included with Mirth Connect.
+The license below pertains to the Microsoft JDBC Driver for SQL Server.
 
 =================== Beginning of License Information ===================
 
@@ -1453,9 +1363,8 @@ IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 
 
-The license below pertains to the jEdit Syntax package, which is included with
-Mirth Connect. Modifications to this library were made to fix some small issues
-related to syntax highlighting.
+The license below pertains to the jEdit Syntax package. Modifications to this
+library were made to fix some small issues related to syntax highlighting.
 
 =================== Beginning of License Information ===================
 
@@ -1470,6 +1379,38 @@ remains intact in all source distributions of this package.
 -- Slava Pestov
 25 September 2000
 <sp@gjt.org>
+
+=================== End of License Information ===================
+
+
+--------------------------------------------------------------------------------
+
+
+The license below pertains to java-semver version 0.10.2.
+
+=================== Beginning of License Information ===================
+
+MIT License
+
+Copyright (c) 2012-2024 Zafar Khaja
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 =================== End of License Information ===================
 

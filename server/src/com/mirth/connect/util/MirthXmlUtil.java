@@ -57,7 +57,7 @@ public class MirthXmlUtil {
             // When Saxon-B is on the classpath setting this attribute throws an
             // IllegalArgumentException.
             try {
-                serializerTransformerFactory.setAttribute("indent-number", new Integer(4));
+                serializerTransformerFactory.setAttribute("indent-number", 4);
             } catch (IllegalArgumentException ex) {
                 logger.warn("Could not set serializer attribute: indent-number", ex);
             }
@@ -125,7 +125,7 @@ public class MirthXmlUtil {
                 start++;
                 radix = 16;
             }
-            Character c = new Character((char) Integer.parseInt(entity.substring(start), radix));
+            Character c = (char) Integer.parseInt(entity.substring(start), radix);
             return c.toString();
         } else {
             String s = decoder.get(entity);
@@ -186,13 +186,13 @@ public class MirthXmlUtil {
     }
 
     private static void addEntity(String entity, int value) {
-        decoder.put(entity, (new Character((char) value)).toString());
+        decoder.put(entity, Character.toString((char) value));
         if (value < 0x100)
             encoder[value] = entity;
     }
 
     private static void addXmlEntity(String entity, int value) {
-        decoderXml.put(entity, (new Character((char) value)).toString());
+        decoderXml.put(entity, Character.toString((char) value));
         if (value < 0x100)
             encoderXml[value] = entity;
     }

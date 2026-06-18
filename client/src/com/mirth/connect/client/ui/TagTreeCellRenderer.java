@@ -108,6 +108,8 @@ public class TagTreeCellRenderer extends JPanel implements TreeCellRenderer {
                 if (status.getStatusType() == StatusType.CHANNEL) {
                     icon = UIConstants.ICON_CHANNEL;
                     channel = true;
+                } else if (status.getStatusType() == StatusType.SOURCE_CONNECTOR || status.getStatusType() == StatusType.DESTINATION_CONNECTOR) {
+                    icon = UIConstants.ICON_CONNECTOR;
                 }
             }
         } else if (value instanceof ChannelTableNode) {

@@ -170,7 +170,7 @@ public class SwaggerExamplesServlet extends HttpServlet {
         } else if (exampleRequested.equals("attachment_list")) {
             requestedObject = getAttachmentListExample();
         } else if (exampleRequested.equals("boolean")) {
-            requestedObject = new Boolean(true);
+            requestedObject = true;
         } else if (exampleRequested.equals("calendar")) {
             requestedObject = getCalendarExample();
         } else if (exampleRequested.equals("channel")) {
@@ -290,7 +290,7 @@ public class SwaggerExamplesServlet extends HttpServlet {
 		} else if (exampleRequested.equals("http_dispatcher_properties")) {
 		    requestedObject = getHttpDispatcherPropertiesExample();
 		} else if (exampleRequested.equals("integer")) {
-		    requestedObject = new Integer(1);
+		    requestedObject = 1;
 		} else if (exampleRequested.equals("jms_template_name_set")) {
 		    requestedObject = getJmsTemplateNameSetExample();
 		} else if (exampleRequested.equals("jms_connector_properties")) {

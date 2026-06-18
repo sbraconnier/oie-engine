@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project name="mirth-server" basedir="." default="help">
+<project name="mirth-server" basedir="." default="help"
+	xmlns:jacoco="antlib:org.jacoco.ant" xmlns:unless="ant:unless" xmlns:if="ant:if">
 
 	<property name="keystore_property_file" value="keystore.properties" />
 	<property name="manifest_thread_count" value="4" />
@@ -7,11 +8,14 @@
 	<property name="jdk_src_path" value="" />
 
 	<target name="help">
-		<echo>Mirth Connect Build Help</echo>
+		<echo>OIE Build Help</echo>
 	</target>
 
 	<target name="init">
 		<property file="build.properties" />
+
+		<fail message="Required property archive.entry.date is not set"
+			unless:set="archive.entry.date" />
 
 		<path id="classpath">
 			<fileset dir="${lib}" includes="**/*.jar" />
@@ -64,15 +68,22 @@
 		<property name="plugins.xsltstep" value="${extensions}/xsltstep" />
 	</target>
 
-	<target name="clean" depends="init">
+	<target name="clean" depends="init, clean-legacy-dirs">
 		<delete dir="${logs}" />
 		<mkdir dir="${logs}" />
 
 		<delete dir="${classes}" />
+		<delete dir="${test_classes}" />
 		<delete dir="${setup}" />
 		<delete dir="${dist}" />
-		<delete dir="${build}" />
+		<delete dir="${build.dir}" />
 		<delete dir="${docs.javadocs}" />
+	</target>
+
+	<target name="clean-legacy-dirs" depends="init">
+		<delete dir="${basedir}/code-coverage-reports" />
+		<delete dir="${basedir}/junit-reports" />
+		<delete dir="${basedir}/junit-html" />
 	</target>
 
 	<target name="compile" depends="clean, init, create-javadocs">
@@ -110,15 +121,16 @@
 
 	
 	<target name="create-crypto" depends="compile">
-		<jar destfile="${setup.server.lib}/${crypto.jar}" basedir="${classes}">
+		<jar destfile="${setup.server.lib}/${crypto.jar}" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/commons/encryption/**" />
 		</jar>
 	</target>
 
 	<target name="create-client-core" depends="compile, create-crypto">
-		<jar destfile="${setup.server.lib}/${client-core.jar}" basedir="${classes}">
+		<jar destfile="${setup.server.lib}/${client-core.jar}" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/client/core/**" />
 			<include name="com/mirth/connect/model/**" />
+			<include name="org/openintegrationengine/engine/plugins/datatypes/AbstractXMLReader.class" />
 			<include name="com/mirth/connect/userutil/**" />
 			<include name="com/mirth/connect/util/**" />
 			<include name="com/mirth/connect/server/util/ResourceUtil.class" />
@@ -141,14 +153,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.dicom}/lib" failonerror="false">
+		<copy todir="${connectors.dicom}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/dimse" />
 		</copy>
-		<jar destfile="${connectors.dicom}/dicom-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.dicom}/dicom-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/dimse/DICOMReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/dimse/DICOMDispatcherProperties.class" />
 		</jar>
-		<jar destfile="${connectors.dicom}/dicom-server.jar">
+		<jar destfile="${connectors.dicom}/dicom-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/dimse/**" />
 				<include name="org/dcm4che2/**" />
@@ -164,16 +176,16 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.doc}/lib" failonerror="false">
+		<copy todir="${connectors.doc}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/doc" />
 		</copy>
-		<jar destfile="${connectors.doc}/doc-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.doc}/doc-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/doc/DocumentDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/doc/DocumentConnectorServletInterface.class" />
 			<include name="com/mirth/connect/connectors/doc/PageSize.class" />
 			<include name="com/mirth/connect/connectors/doc/Unit.class" />
 		</jar>
-		<jar destfile="${connectors.doc}/doc-server.jar">
+		<jar destfile="${connectors.doc}/doc-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/doc/**" />
 				<exclude name="com/mirth/connect/connectors/doc/DocumentDispatcherProperties.class" />
@@ -190,10 +202,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.file}/lib" failonerror="false">
+		<copy todir="${connectors.file}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/file" />
 		</copy>
-		<jar destfile="${connectors.file}/file-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.file}/file-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/file/SchemeProperties.class" />
 			<include name="com/mirth/connect/connectors/file/FTPSchemeProperties.class" />
 			<include name="com/mirth/connect/connectors/file/SmbDialectVersion.class" />
@@ -206,7 +218,7 @@
 			<include name="com/mirth/connect/connectors/file/FileAction.class" />
 			<include name="com/mirth/connect/connectors/file/FileConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.file}/file-server.jar">
+		<jar destfile="${connectors.file}/file-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/file/**" />
 				<exclude name="com/mirth/connect/connectors/file/SchemeProperties.class" />
@@ -228,17 +240,17 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.http}/lib" failonerror="false">
+		<copy todir="${connectors.http}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/http" />
 		</copy>
-		<jar destfile="${connectors.http}/http-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.http}/http-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/http/HttpReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/http/HttpDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/http/HttpStaticResource.class" />
 			<include name="com/mirth/connect/connectors/http/HttpStaticResource$ResourceType.class" />
 			<include name="com/mirth/connect/connectors/http/HttpConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.http}/http-server.jar">
+		<jar destfile="${connectors.http}/http-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/http/**" />
 				<exclude name="com/mirth/connect/connectors/http/HttpReceiverProperties.class" />
@@ -256,10 +268,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.jdbc}/lib" failonerror="false">
+		<copy todir="${connectors.jdbc}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/jdbc" />
 		</copy>
-		<jar destfile="${connectors.jdbc}/jdbc-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.jdbc}/jdbc-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/jdbc/DatabaseReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/jdbc/DatabaseDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/jdbc/DatabaseConnectionInfo.class" />
@@ -267,7 +279,7 @@
 			<include name="com/mirth/connect/connectors/jdbc/Column.class" />
 			<include name="com/mirth/connect/connectors/jdbc/DatabaseConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.jdbc}/jdbc-server.jar">
+		<jar destfile="${connectors.jdbc}/jdbc-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/jdbc/**" />
 				<exclude name="com/mirth/connect/connectors/jdbc/DatabaseReceiverProperties.class" />
@@ -286,16 +298,16 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.jms}/lib" failonerror="false">
+		<copy todir="${connectors.jms}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/jms" />
 		</copy>
-		<jar destfile="${connectors.jms}/jms-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.jms}/jms-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/jms/JmsConnectorProperties.class" />
 			<include name="com/mirth/connect/connectors/jms/JmsReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/jms/JmsDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/jms/JmsConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.jms}/jms-server.jar">
+		<jar destfile="${connectors.jms}/jms-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/jms/**" />
 				<exclude name="com/mirth/connect/connectors/jms/JmsConnectorProperties.class" />
@@ -312,14 +324,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.js}/lib" failonerror="false">
+		<copy todir="${connectors.js}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/js" />
 		</copy>
-		<jar destfile="${connectors.js}/js-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.js}/js-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/js/JavaScriptReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/js/JavaScriptDispatcherProperties.class" />
 		</jar>
-		<jar destfile="${connectors.js}/js-server.jar">
+		<jar destfile="${connectors.js}/js-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/js/**" />
 				<exclude name="com/mirth/connect/connectors/js/JavaScriptReceiverProperties.class" />
@@ -334,15 +346,15 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.smtp}/lib" failonerror="false">
+		<copy todir="${connectors.smtp}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/smtp" />
 		</copy>
-		<jar destfile="${connectors.smtp}/smtp-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.smtp}/smtp-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/smtp/SmtpDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/smtp/SmtpConnectorServletInterface.class" />
 			<include name="com/mirth/connect/connectors/smtp/Attachment.class" />
 		</jar>
-		<jar destfile="${connectors.smtp}/smtp-server.jar">
+		<jar destfile="${connectors.smtp}/smtp-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/smtp/**" />
 				<exclude name="com/mirth/connect/connectors/smtp/SmtpDispatcherProperties.class" />
@@ -358,15 +370,15 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.tcp}/lib" failonerror="false">
+		<copy todir="${connectors.tcp}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/tcp" />
 		</copy>
-		<jar destfile="${connectors.tcp}/tcp-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.tcp}/tcp-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/tcp/TcpReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/tcp/TcpDispatcherProperties.class" />
 			<include name="com/mirth/connect/connectors/tcp/TcpConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.tcp}/tcp-server.jar">
+		<jar destfile="${connectors.tcp}/tcp-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/tcp/**" />
 				<exclude name="com/mirth/connect/connectors/tcp/TcpReceiverProperties.class" />
@@ -382,14 +394,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.vm}/lib" failonerror="false">
+		<copy todir="${connectors.vm}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/vm" />
 		</copy>
-		<jar destfile="${connectors.vm}/vm-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.vm}/vm-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/vm/VmReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/vm/VmDispatcherProperties.class" />
 		</jar>
-		<jar destfile="${connectors.vm}/vm-server.jar">
+		<jar destfile="${connectors.vm}/vm-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/vm/**" />
 				<exclude name="com/mirth/connect/connectors/vm/VmReceiverProperties.class" />
@@ -404,10 +416,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${connectors.ws}/lib" failonerror="false">
+		<copy todir="${connectors.ws}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/ws" />
 		</copy>
-		<jar destfile="${connectors.ws}/ws-shared.jar" basedir="${classes}">
+		<jar destfile="${connectors.ws}/ws-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/connectors/ws/Binding.class" />
 			<include name="com/mirth/connect/connectors/ws/WebServiceReceiverProperties.class" />
 			<include name="com/mirth/connect/connectors/ws/WebServiceDispatcherProperties.class" />
@@ -416,7 +428,7 @@
 			<include name="com/mirth/connect/connectors/ws/DefinitionServiceMap$PortInformation.class" />
 			<include name="com/mirth/connect/connectors/ws/WebServiceConnectorServletInterface.class" />
 		</jar>
-		<jar destfile="${connectors.ws}/ws-server.jar">
+		<jar destfile="${connectors.ws}/ws-server.jar" modificationTime="${archive.entry.date}">
 			<fileset dir="${classes}">
 				<include name="com/mirth/connect/connectors/ws/**" />
 				<exclude name="com/mirth/connect/connectors/ws/Binding.class" />
@@ -443,16 +455,16 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-delimited}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-delimited}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/delimited" />
 		</copy>
-		<jar destfile="${plugins.datatype-delimited}/datatype-delimited-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-delimited}/datatype-delimited-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/delimited/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/delimited/DelimitedDataTypeServerPlugin.class" />
 			<exclude name="com/mirth/connect/plugins/datatypes/delimited/DelimitedBatchAdaptor.class" />
 			<exclude name="com/mirth/connect/plugins/datatypes/delimited/DelimitedBatchReader.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-delimited}/datatype-delimited-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-delimited}/datatype-delimited-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/delimited/DelimitedDataTypeServerPlugin.class" />
 			<include name="com/mirth/connect/plugins/datatypes/delimited/DelimitedBatchAdaptor.class" />
 			<include name="com/mirth/connect/plugins/datatypes/delimited/DelimitedBatchReader.class" />
@@ -465,14 +477,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-dicom}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-dicom}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/dicom" />
 		</copy>
-		<jar destfile="${plugins.datatype-dicom}/datatype-dicom-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-dicom}/datatype-dicom-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/dicom/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/dicom/DICOMDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-dicom}/datatype-dicom-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-dicom}/datatype-dicom-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/dicom/DICOMDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -484,18 +496,18 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-edi}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-edi}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/edi" />
 		</copy>
 		<!-- copy the xml files so they will be included in jar -->
 		<copy todir="${classes}/com/mirth/connect/plugins/datatypes/edi/xml">
 			<fileset dir="${src}/com/mirth/connect/plugins/datatypes/edi/xml" />
 		</copy>
-		<jar destfile="${plugins.datatype-edi}/datatype-edi-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-edi}/datatype-edi-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/edi/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/edi/EDIDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-edi}/datatype-edi-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-edi}/datatype-edi-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/edi/EDIDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -506,15 +518,15 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-hl7v2}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-hl7v2}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/hl7v2" />
 		</copy>
-		<jar destfile="${plugins.datatype-hl7v2}/datatype-hl7v2-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-hl7v2}/datatype-hl7v2-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/hl7v2/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/hl7v2/HL7v2DataTypeServerPlugin.class" />
 			<exclude name="com/mirth/connect/plugins/datatypes/hl7v2/HL7v2BatchAdaptor.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-hl7v2}/datatype-hl7v2-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-hl7v2}/datatype-hl7v2-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/hl7v2/HL7v2DataTypeServerPlugin.class" />
 			<include name="com/mirth/connect/plugins/datatypes/hl7v2/HL7v2BatchAdaptor.class" />
 		</jar>
@@ -526,14 +538,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-hl7v3}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-hl7v3}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/hl7v3" />
 		</copy>
-		<jar destfile="${plugins.datatype-hl7v3}/datatype-hl7v3-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-hl7v3}/datatype-hl7v3-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/hl7v3/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/hl7v3/HL7V3DataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-hl7v3}/datatype-hl7v3-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-hl7v3}/datatype-hl7v3-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/hl7v3/HL7V3DataTypeServerPlugin.class" />
 		</jar>
 		
@@ -544,14 +556,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-ncpdp}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-ncpdp}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/ncpdp" />
 		</copy>
-		<jar destfile="${plugins.datatype-ncpdp}/datatype-ncpdp-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-ncpdp}/datatype-ncpdp-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/ncpdp/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/ncpdp/NCPDPDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-ncpdp}/datatype-ncpdp-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-ncpdp}/datatype-ncpdp-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/ncpdp/NCPDPDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -562,14 +574,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-xml}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-xml}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/xml" />
 		</copy>
-		<jar destfile="${plugins.datatype-xml}/datatype-xml-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-xml}/datatype-xml-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/xml/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/xml/XMLDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-xml}/datatype-xml-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-xml}/datatype-xml-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/xml/XMLDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -580,14 +592,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-raw}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-raw}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/raw" />
 		</copy>
-		<jar destfile="${plugins.datatype-raw}/datatype-raw-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-raw}/datatype-raw-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/raw/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/raw/RawDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-raw}/datatype-raw-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-raw}/datatype-raw-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/raw/RawDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -598,14 +610,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datatype-json}/lib" failonerror="false">
+		<copy todir="${plugins.datatype-json}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datatypes/json" />
 		</copy>
-		<jar destfile="${plugins.datatype-json}/datatype-json-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-json}/datatype-json-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/json/**" />
 			<exclude name="com/mirth/connect/plugins/datatypes/json/JSONDataTypeServerPlugin.class" />
 		</jar>
-		<jar destfile="${plugins.datatype-json}/datatype-json-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datatype-json}/datatype-json-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datatypes/json/JSONDataTypeServerPlugin.class" />
 		</jar>
 		
@@ -616,14 +628,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.directoryresource}/lib" failonerror="false">
+		<copy todir="${plugins.directoryresource}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/directoryresource" />
 		</copy>
-		<jar destfile="${plugins.directoryresource}/directoryresource-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.directoryresource}/directoryresource-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/directoryresource/DirectoryResourceProperties.class" />
 			<include name="com/mirth/connect/plugins/directoryresource/DirectoryResourceServletInterface.class" />
 		</jar>
-		<jar destfile="${plugins.directoryresource}/directoryresource-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.directoryresource}/directoryresource-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/directoryresource/**" />
 			<exclude name="com/mirth/connect/plugins/directoryresource/DirectoryResourceProperties.class" />
 			<exclude name="com/mirth/connect/plugins/directoryresource/DirectoryResourceServletInterface.class" />
@@ -636,14 +648,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.dashboardstatus}/lib" failonerror="false">
+		<copy todir="${plugins.dashboardstatus}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/dashboardstatus" />
 		</copy>
-		<jar destfile="${plugins.dashboardstatus}/dashboardstatus-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.dashboardstatus}/dashboardstatus-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/dashboardstatus/ConnectionLogItem.class" />
 			<include name="com/mirth/connect/plugins/dashboardstatus/DashboardConnectorStatusServletInterface.class" />
 		</jar>
-		<jar destfile="${plugins.dashboardstatus}/dashboardstatus-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.dashboardstatus}/dashboardstatus-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/dashboardstatus/**" />
 			<exclude name="com/mirth/connect/plugins/dashboardstatus/ConnectionLogItem.class" />
 			<exclude name="com/mirth/connect/plugins/dashboardstatus/DashboardConnectorStatusServletInterface.class" />
@@ -656,10 +668,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.destinationsetfilter}/lib" failonerror="false">
+		<copy todir="${plugins.destinationsetfilter}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/destinationsetfilter" />
 		</copy>
-		<jar destfile="${plugins.destinationsetfilter}/destinationsetfilter-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.destinationsetfilter}/destinationsetfilter-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/destinationsetfilter/DestinationSetFilterStep.class" />
 			<include name="com/mirth/connect/plugins/destinationsetfilter/DestinationSetFilterStep$Behavior.class" />
 			<include name="com/mirth/connect/plugins/destinationsetfilter/DestinationSetFilterStep$Condition.class" />
@@ -672,7 +684,7 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.dicomviewer}/lib" failonerror="false">
+		<copy todir="${plugins.dicomviewer}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/dicomviewer" />
 		</copy>
 		
@@ -683,13 +695,13 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.globalmapviewer}/lib" failonerror="false">
+		<copy todir="${plugins.globalmapviewer}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/globalmapviewer" />
 		</copy>
-		<jar destfile="${plugins.globalmapviewer}/globalmapviewer-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.globalmapviewer}/globalmapviewer-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/globalmapviewer/GlobalMapServletInterface.class" />
 		</jar>
-		<jar destfile="${plugins.globalmapviewer}/globalmapviewer-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.globalmapviewer}/globalmapviewer-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/globalmapviewer/**" />
 			<exclude name="com/mirth/connect/plugins/globalmapviewer/GlobalMapServletInterface.class" />
 		</jar>
@@ -701,10 +713,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.httpauth}/lib" failonerror="false">
+		<copy todir="${plugins.httpauth}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/httpauth" />
 		</copy>
-		<jar destfile="${plugins.httpauth}/httpauth-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.httpauth}/httpauth-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/httpauth/HttpAuthConnectorPluginProperties.class" />
 			<include name="com/mirth/connect/plugins/httpauth/HttpAuthConnectorPluginProperties$AuthType.class" />
 			<include name="com/mirth/connect/plugins/httpauth/NoneHttpAuthProperties.class" />
@@ -717,7 +729,7 @@
 			<include name="com/mirth/connect/plugins/httpauth/oauth2/OAuth2HttpAuthProperties.class" />
 			<include name="com/mirth/connect/plugins/httpauth/oauth2/OAuth2HttpAuthProperties$TokenLocation.class" />
 		</jar>
-		<jar destfile="${plugins.httpauth}/httpauth-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.httpauth}/httpauth-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/httpauth/**" />
 			<exclude name="com/mirth/connect/plugins/httpauth/HttpAuthConnectorPluginProperties.class" />
 			<exclude name="com/mirth/connect/plugins/httpauth/HttpAuthConnectorPluginProperties$AuthType.class" />
@@ -731,7 +743,7 @@
 			<exclude name="com/mirth/connect/plugins/httpauth/oauth2/OAuth2HttpAuthProperties.class" />
 			<exclude name="com/mirth/connect/plugins/httpauth/oauth2/OAuth2HttpAuthProperties$TokenLocation.class" />
 		</jar>
-		<jar destfile="${plugins.httpauth}/src/httpauth-userutil-sources.jar" basedir="${src}">
+		<jar destfile="${plugins.httpauth}/src/httpauth-userutil-sources.jar" basedir="${src}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/httpauth/userutil/**" />
 		</jar>
 
@@ -742,7 +754,7 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.imageviewer}/lib" failonerror="false">
+		<copy todir="${plugins.imageviewer}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/imageviewer" />
 		</copy>
 
@@ -753,10 +765,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.javascriptrule}/lib" failonerror="false">
+		<copy todir="${plugins.javascriptrule}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/javascriptrule" />
 		</copy>
-		<jar destfile="${plugins.javascriptrule}/javascriptrule-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.javascriptrule}/javascriptrule-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/javascriptrule/JavaScriptRule.class" />
 		</jar>
 
@@ -767,10 +779,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.javascriptstep}/lib" failonerror="false">
+		<copy todir="${plugins.javascriptstep}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/javascriptstep" />
 		</copy>
-		<jar destfile="${plugins.javascriptstep}/javascriptstep-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.javascriptstep}/javascriptstep-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/javascriptstep/JavaScriptStep.class" />
 		</jar>
 
@@ -781,10 +793,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.mapper}/lib" failonerror="false">
+		<copy todir="${plugins.mapper}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/mapper" />
 		</copy>
-		<jar destfile="${plugins.mapper}/mapper-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.mapper}/mapper-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/mapper/MapperStep.class" />
 			<include name="com/mirth/connect/plugins/mapper/MapperStep$Scope.class" />
 		</jar>
@@ -796,10 +808,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.messagebuilder}/lib" failonerror="false">
+		<copy todir="${plugins.messagebuilder}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/messagebuilder" />
 		</copy>
-		<jar destfile="${plugins.messagebuilder}/messagebuilder-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.messagebuilder}/messagebuilder-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/messagebuilder/MessageBuilderStep.class" />
 		</jar>
 
@@ -810,13 +822,13 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.datapruner}/lib" failonerror="false">
+		<copy todir="${plugins.datapruner}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/datapruner" />
 		</copy>
-		<jar destfile="${plugins.datapruner}/datapruner-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.datapruner}/datapruner-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datapruner/DataPrunerServletInterface.class" />
 		</jar>
-		<jar destfile="${plugins.datapruner}/datapruner-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.datapruner}/datapruner-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/datapruner/**" />
 			<exclude name="com/mirth/connect/plugins/datapruner/DataPrunerServletInterface.class" />
 		</jar>
@@ -828,13 +840,13 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.mllpmode}/lib" failonerror="false">
+		<copy todir="${plugins.mllpmode}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/mllpmode" />
 		</copy>
-		<jar destfile="${plugins.mllpmode}/mllpmode-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.mllpmode}/mllpmode-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/mllpmode/MLLPModeProperties.class" />
 		</jar>
-		<jar destfile="${plugins.mllpmode}/mllpmode-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.mllpmode}/mllpmode-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/mllpmode/**" />
 			<exclude name="com/mirth/connect/plugins/mllpmode/MLLPModeProperties.class" />
 		</jar>
@@ -846,7 +858,7 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.pdfviewer}/lib" failonerror="false">
+		<copy todir="${plugins.pdfviewer}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/pdfviewer" />
 		</copy>
 
@@ -857,7 +869,7 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.textviewer}/lib" failonerror="false">
+		<copy todir="${plugins.textviewer}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/textviewer" />
 		</copy>
 
@@ -868,10 +880,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.rulebuilder}/lib" failonerror="false">
+		<copy todir="${plugins.rulebuilder}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/rulebuilder" />
 		</copy>
-		<jar destfile="${plugins.rulebuilder}/rulebuilder-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.rulebuilder}/rulebuilder-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/rulebuilder/RuleBuilderRule.class" />
 			<include name="com/mirth/connect/plugins/rulebuilder/RuleBuilderRule$Condition.class" />
 		</jar>
@@ -883,14 +895,14 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.serverlog}/lib" failonerror="false">
+		<copy todir="${plugins.serverlog}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/serverlog" />
 		</copy>
-		<jar destfile="${plugins.serverlog}/serverlog-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.serverlog}/serverlog-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/serverlog/ServerLogItem.class" />
 			<include name="com/mirth/connect/plugins/serverlog/ServerLogServletInterface.class" />
 		</jar>
-		<jar destfile="${plugins.serverlog}/serverlog-server.jar" basedir="${classes}">
+		<jar destfile="${plugins.serverlog}/serverlog-server.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/serverlog/**" />
 			<exclude name="com/mirth/connect/plugins/serverlog/ServerLogItem.class" />
 			<exclude name="com/mirth/connect/plugins/serverlog/ServerLogServletInterface.class" />
@@ -903,10 +915,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.scriptfilerule}/lib" failonerror="false">
+		<copy todir="${plugins.scriptfilerule}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/scriptfilerule" />
 		</copy>
-		<jar destfile="${plugins.scriptfilerule}/scriptfilerule-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.scriptfilerule}/scriptfilerule-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/scriptfilerule/ExternalScriptRule.class" />
 		</jar>
 
@@ -917,10 +929,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.scriptfilestep}/lib" failonerror="false">
+		<copy todir="${plugins.scriptfilestep}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/scriptfilestep" />
 		</copy>
-		<jar destfile="${plugins.scriptfilestep}/scriptfilestep-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.scriptfilestep}/scriptfilestep-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/scriptfilestep/ExternalScriptStep.class" />
 		</jar>
 
@@ -931,10 +943,10 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<copy todir="${plugins.xsltstep}/lib" failonerror="false">
+		<copy todir="${plugins.xsltstep}/lib" failonerror="false" quiet="true">
 			<fileset dir="${lib.extensions}/xsltstep" />
 		</copy>
-		<jar destfile="${plugins.xsltstep}/xsltstep-shared.jar" basedir="${classes}">
+		<jar destfile="${plugins.xsltstep}/xsltstep-shared.jar" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/plugins/xsltstep/XsltStep.class" />
 		</jar>
 
@@ -955,7 +967,6 @@
 		<mkdir dir="${setup.public_api_html}" />
 		<mkdir dir="${setup.server.lib}" />
 		<mkdir dir="${setup.client.lib}" />
-		<mkdir dir="${setup.manager.lib}" />
 		<mkdir dir="${setup.cli.lib}" />
 		<mkdir dir="${setup.logs}" />
 		<mkdir dir="${setup.docs}" />
@@ -1007,8 +1018,14 @@
 			<fileset dir="${basedir_includes}" />
 		</copy>
 
+		<!-- make oieserver script executable on unix platforms -->
+		<chmod file="${setup}/oieserver" perm="755"/>
+
+		<!-- make scripts executable on unix platforms -->
+		<chmod file="${setup}/configure-from-env" perm="755"/>
+
 		<!-- create the server jar -->
-		<jar destfile="${setup.server.lib}/${server.jar}" basedir="${classes}">
+		<jar destfile="${setup.server.lib}/${server.jar}" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/server/**" />
 			<include name="com/mirth/connect/model/**" />
 			<include name="com/mirth/connect/util/**" />
@@ -1024,21 +1041,21 @@
 		</jar>
 
 		<!-- create the dbconf jar -->
-		<jar destfile="${setup.server.lib}/${dbconf.jar}" basedir="${dbconf}" />
+		<jar destfile="${setup.server.lib}/${dbconf.jar}" basedir="${dbconf}" modificationTime="${archive.entry.date}" />
 
 		<!-- create the mirth-launcher jar -->
-		<jar destfile="${setup}/${mirth-launcher.jar}" basedir="${classes}">
+		<jar destfile="${setup}/${mirth-launcher.jar}" basedir="${classes}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/server/launcher/**" />
 			<include name="com/mirth/connect/server/extprops/**" />
 
 			<manifest>
 				<attribute name="Main-Class" value="com.mirth.connect.server.launcher.MirthLauncher" />
-				<attribute name="Class-Path" value="server-lib/commons/commons-io-2.13.0.jar server-lib/commons/commons-configuration2-2.8.0.jar server-lib/commons/commons-lang3-3.13.0.jar server-lib/commons/commons-logging-1.2.jar server-lib/commons/commons-beanutils-1.9.4.jar server-lib/commons/commons-text-1.10.0.jar server-lib/commons/commons-collections-3.2.2.jar conf/" />
+				<attribute name="Class-Path" value="server-lib/commons/commons-io-2.21.0.jar server-lib/commons/commons-configuration2-2.13.0.jar server-lib/commons/commons-lang3-3.20.0.jar server-lib/commons/commons-logging-1.3.5.jar server-lib/commons/commons-beanutils-1.11.0.jar server-lib/commons/commons-text-1.15.0.jar server-lib/commons/commons-collections-3.2.2.jar conf/" />
 			</manifest>
 		</jar>
 		
 		<!-- create the userutil-sources jar -->
-		<jar destfile="${setup.client.lib}/${userutil-sources.jar}" basedir="${src}">
+		<jar destfile="${setup.client.lib}/${userutil-sources.jar}" basedir="${src}" modificationTime="${archive.entry.date}">
 			<include name="com/mirth/connect/userutil/**.java" />
 			<include name="com/mirth/connect/server/userutil/**.java" />
 			<exclude name="**/package-info.java" />
@@ -1062,7 +1079,7 @@
 			<else>
 				<!-- modify jar manifests -->
 				<!-- don't modify bcprov, since it already has the manifest changes and is signed by BC -->
-				<echo message="[Thread Count: ${manifest_thread_count}] Modifying jar manifests to add Permissions: all-permissions; Codebase: *; Application-Name: Mirth Connect" />
+				<echo message="[Thread Count: ${manifest_thread_count}] Modifying jar manifests to add Permissions: all-permissions; Codebase: *; Application-Name: Open Integration Engine" />
 				<for param="jarFile" parallel="true" threadCount="${manifest_thread_count}">
 					<fileset dir="${setup.client.lib}" includes="**/*.jar" excludes="bcp*.jar,bcutil*.jar"/>
 					<fileset dir="${setup.extensions}" includes="**/*.jar" />
@@ -1147,45 +1164,45 @@
 		<delete dir="${dist.extensions}" />
 		<mkdir dir="${dist.extensions}" />
 
-		<zip destfile="${dist.extensions}/jms-${version}.zip" basedir="${extensions}" includes="jms/**/*" />
-		<zip destfile="${dist.extensions}/jdbc-${version}.zip" basedir="${extensions}" includes="jdbc/**/*" />
-		<zip destfile="${dist.extensions}/dicom-${version}.zip" basedir="${extensions}" includes="dicom/**/*" />
-		<zip destfile="${dist.extensions}/http-${version}.zip" basedir="${extensions}" includes="http/**/*" />
-		<zip destfile="${dist.extensions}/doc-${version}.zip" basedir="${extensions}" includes="doc/**/*" />
-		<zip destfile="${dist.extensions}/smtp-${version}.zip" basedir="${extensions}" includes="smtp/**/*" />
-		<zip destfile="${dist.extensions}/tcp-${version}.zip" basedir="${extensions}" includes="tcp/**/*" />
-		<zip destfile="${dist.extensions}/file-${version}.zip" basedir="${extensions}" includes="file/**/*" />
-		<zip destfile="${dist.extensions}/js-${version}.zip" basedir="${extensions}" includes="js/**/*" />
-		<zip destfile="${dist.extensions}/ws-${version}.zip" basedir="${extensions}" includes="ws/**/*" />
-		<zip destfile="${dist.extensions}/vm-${version}.zip" basedir="${extensions}" includes="vm/**/*" />
+		<zip destfile="${dist.extensions}/jms-${version}.zip" basedir="${extensions}" includes="jms/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/jdbc-${version}.zip" basedir="${extensions}" includes="jdbc/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/dicom-${version}.zip" basedir="${extensions}" includes="dicom/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/http-${version}.zip" basedir="${extensions}" includes="http/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/doc-${version}.zip" basedir="${extensions}" includes="doc/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/smtp-${version}.zip" basedir="${extensions}" includes="smtp/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/tcp-${version}.zip" basedir="${extensions}" includes="tcp/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/file-${version}.zip" basedir="${extensions}" includes="file/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/js-${version}.zip" basedir="${extensions}" includes="js/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/ws-${version}.zip" basedir="${extensions}" includes="ws/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/vm-${version}.zip" basedir="${extensions}" includes="vm/**/*" modificationTime="${archive.entry.date}" />
 		
-		<zip destfile="${dist.extensions}/datatype-delimited-${version}.zip" basedir="${extensions}" includes="datatype-delimited/**/*" />
-		<zip destfile="${dist.extensions}/datatype-dicom-${version}.zip" basedir="${extensions}" includes="datatype-dicom/**/*" />
-		<zip destfile="${dist.extensions}/datatype-edi-${version}.zip" basedir="${extensions}" includes="datatype-edi/**/*" />
-		<zip destfile="${dist.extensions}/datatype-hl7v2-${version}.zip" basedir="${extensions}" includes="datatype-hl7v2/**/*" />
-		<zip destfile="${dist.extensions}/datatype-hl7v3-${version}.zip" basedir="${extensions}" includes="datatype-hl7v3/**/*" />
-		<zip destfile="${dist.extensions}/datatype-ncpdp-${version}.zip" basedir="${extensions}" includes="datatype-ncpdp/**/*" />
-		<zip destfile="${dist.extensions}/datatype-xml-${version}.zip" basedir="${extensions}" includes="datatype-xml/**/*" />
-		<zip destfile="${dist.extensions}/datatype-raw-${version}.zip" basedir="${extensions}" includes="datatype-raw/**/*" />
-		<zip destfile="${dist.extensions}/datatype-json-${version}.zip" basedir="${extensions}" includes="datatype-json/**/*" />
+		<zip destfile="${dist.extensions}/datatype-delimited-${version}.zip" basedir="${extensions}" includes="datatype-delimited/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-dicom-${version}.zip" basedir="${extensions}" includes="datatype-dicom/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-edi-${version}.zip" basedir="${extensions}" includes="datatype-edi/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-hl7v2-${version}.zip" basedir="${extensions}" includes="datatype-hl7v2/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-hl7v3-${version}.zip" basedir="${extensions}" includes="datatype-hl7v3/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-ncpdp-${version}.zip" basedir="${extensions}" includes="datatype-ncpdp/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-xml-${version}.zip" basedir="${extensions}" includes="datatype-xml/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-raw-${version}.zip" basedir="${extensions}" includes="datatype-raw/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datatype-json-${version}.zip" basedir="${extensions}" includes="datatype-json/**/*" modificationTime="${archive.entry.date}" />
 
-		<zip destfile="${dist.extensions}/directoryresource-${version}.zip" basedir="${extensions}" includes="directoryresource/**/*" />
-		<zip destfile="${dist.extensions}/dashboardstatus-${version}.zip" basedir="${extensions}" includes="dashboardstatus/**/*" />
-		<zip destfile="${dist.extensions}/destinationsetfilter-${version}.zip" basedir="${extensions}" includes="destinationsetfilter/**/*" />
-		<zip destfile="${dist.extensions}/serverlog-${version}.zip" basedir="${extensions}" includes="serverlog/**/*" />
-		<zip destfile="${dist.extensions}/datapruner-${version}.zip" basedir="${extensions}" includes="datapruner/**/*" />
-		<zip destfile="${dist.extensions}/javascriptstep-${version}.zip" basedir="${extensions}" includes="javascriptstep/**/*" />
-		<zip destfile="${dist.extensions}/mapper-${version}.zip" basedir="${extensions}" includes="mapper/**/*" />
-		<zip destfile="${dist.extensions}/messagebuilder-${version}.zip" basedir="${extensions}" includes="messagebuilder/**/*" />
-		<zip destfile="${dist.extensions}/scriptfilestep-${version}.zip" basedir="${extensions}" includes="scriptfilestep/**/*" />
-		<zip destfile="${dist.extensions}/rulebuilder-${version}.zip" basedir="${extensions}" includes="rulebuilder/**/*" />
-		<zip destfile="${dist.extensions}/javascriptrule-${version}.zip" basedir="${extensions}" includes="javascriptrule/**/*" />
-		<zip destfile="${dist.extensions}/dicomviewer-${version}.zip" basedir="${extensions}" includes="dicomviewer/**/*" />
-		<zip destfile="${dist.extensions}/pdfviewer-${version}.zip" basedir="${extensions}" includes="pdfviewer/**/*" />
-		<zip destfile="${dist.extensions}/textviewer-${version}.zip" basedir="${extensions}" includes="textviewer/**/*" />
-		<zip destfile="${dist.extensions}/httpauth-${version}.zip" basedir="${extensions}" includes="httpauth/**/*" />
-		<zip destfile="${dist.extensions}/imageviewer-${version}.zip" basedir="${extensions}" includes="imageviewer/**/*" />
-		<zip destfile="${dist.extensions}/globalmapviewer-${version}.zip" basedir="${extensions}" includes="globalmapviewer/**/*" />
+		<zip destfile="${dist.extensions}/directoryresource-${version}.zip" basedir="${extensions}" includes="directoryresource/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/dashboardstatus-${version}.zip" basedir="${extensions}" includes="dashboardstatus/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/destinationsetfilter-${version}.zip" basedir="${extensions}" includes="destinationsetfilter/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/serverlog-${version}.zip" basedir="${extensions}" includes="serverlog/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/datapruner-${version}.zip" basedir="${extensions}" includes="datapruner/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/javascriptstep-${version}.zip" basedir="${extensions}" includes="javascriptstep/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/mapper-${version}.zip" basedir="${extensions}" includes="mapper/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/messagebuilder-${version}.zip" basedir="${extensions}" includes="messagebuilder/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/scriptfilestep-${version}.zip" basedir="${extensions}" includes="scriptfilestep/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/rulebuilder-${version}.zip" basedir="${extensions}" includes="rulebuilder/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/javascriptrule-${version}.zip" basedir="${extensions}" includes="javascriptrule/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/dicomviewer-${version}.zip" basedir="${extensions}" includes="dicomviewer/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/pdfviewer-${version}.zip" basedir="${extensions}" includes="pdfviewer/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/textviewer-${version}.zip" basedir="${extensions}" includes="textviewer/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/httpauth-${version}.zip" basedir="${extensions}" includes="httpauth/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/imageviewer-${version}.zip" basedir="${extensions}" includes="imageviewer/**/*" modificationTime="${archive.entry.date}" />
+		<zip destfile="${dist.extensions}/globalmapviewer-${version}.zip" basedir="${extensions}" includes="globalmapviewer/**/*" modificationTime="${archive.entry.date}" />
 	</target>
 
 	<target name="create-dist" depends="create-extension-zips">
@@ -1195,13 +1212,14 @@
 	<target name="create-javadocs" depends="init">
 		<mkdir dir="${docs.javadocs}" />
 		
-		<javadoc sourcepath="${src}:${jdk_src_path}" destdir="${docs.javadocs.userapi}" packagenames="com.mirth.connect.server.userutil,com.mirth.connect.userutil,com.mirth.connect.plugins.httpauth.userutil" link="https://docs.oracle.com/javase/8/docs/api/">
+		<javadoc sourcepath="${src}:${jdk_src_path}" destdir="${docs.javadocs.userapi}" packagenames="com.mirth.connect.server.userutil,com.mirth.connect.userutil,com.mirth.connect.plugins.httpauth.userutil" link="https://docs.oracle.com/en/java/javase/17/docs/api/">
 			<classpath refid="classpath" />
-			<!-- Uncomment the following and add additional dashes in front of the arguments to allow Java 9+
-				<arg line="-html5"/>
-				<arg line="-add-modules java.sql.rowset"/>
-				<arg line="-add-exports java.sql.rowset/com.sun.rowset=ALL-UNNAMED"/>
-			-->
+			<bottom>
+				<![CDATA[Licensed under the <a href="https://www.mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.]]>
+			</bottom>
+			<arg value="-notimestamp"/>
+			<arg value="--add-modules=java.sql.rowset"/>
+			<arg value="--add-exports=java.sql.rowset/com.sun.rowset=ALL-UNNAMED"/>
 		</javadoc>
 	</target>
 
@@ -1214,18 +1232,18 @@
 				<pathelement location="classes" />
 				<pathelement location="${setup.conf}" />
 				<fileset dir="${lib}">
-					<include name="log4j/log4j-api-2.17.2.jar" />
-					<include name="log4j/log4j-core-2.17.2.jar" />
+					<include name="log4j/log4j-api-2.25.3.jar" />
+					<include name="log4j/log4j-core-2.25.3.jar" />
 					<include name="database/derby-10.10.2.0.jar" />
 					<include name="database/derbytools-10.10.2.0.jar" />
-					<include name="commons/commons-io-2.13.0.jar" />
+					<include name="commons/commons-io-2.21.0.jar" />
 				</fileset>
 			</classpath>
 			<arg value="dbconf/derby/derby-database.sql" />
 		</java>
 	</target>
 
-	<target name="dev-launcher" depends="init" description="This runs Mirth using the setup launcher">
+	<target name="dev-launcher" depends="init" description="This runs OIE using the setup launcher">
 		<java classname="com.mirth.connect.server.launcher.MirthLauncher" fork="true" dir="${setup}" failonerror="true">
 			<classpath>
 				<pathelement location="${setup}/mirth-launcher.jar" />
@@ -1233,7 +1251,7 @@
 		</java>
 	</target>
 
-	<target name="dev-run" depends="init" description="This runs the mirth server using the Eclipse environment">
+	<target name="dev-run" depends="init" description="This runs the OIE server using the Eclipse environment">
 		<java classname="com.mirth.connect.server.Mirth" fork="true" dir="${basedir}" failonerror="true">
 			<classpath>
 				<pathelement location="bin" />
@@ -1263,12 +1281,10 @@
 		
 		<javac srcdir="${test}" destdir="${test_classes}" debug="on" includeAntRuntime="false">
 			<classpath refid="testclasspath" />
-			<!-- Uncomment the following and add additional dashes in front of the arguments to allow Java 9+
-				<compilerarg value="-add-modules" />
-				<compilerarg value="java.sql.rowset,java.xml.ws" />
-				<compilerarg value="-add-exports" />
-				<compilerarg value="java.sql.rowset/com.sun.rowset=ALL-UNNAMED" />
-			-->
+			<compilerarg value="--add-modules=java.sql.rowset" />
+			<compilerarg value="--add-exports=java.sql.rowset/com.sun.rowset=ALL-UNNAMED" />
+			<compilerarg value="--add-exports=java.base/com.sun.crypto.provider=ALL-UNNAMED" />
+			<compilerarg value="--add-exports=java.base/sun.security.provider=ALL-UNNAMED" />
 		</javac>
 		
 		<copy todir="${test_classes}">
@@ -1278,46 +1294,113 @@
 			</fileset>
 		</copy>
 		
-		<jar destfile="${test.dist}/${tests.jar}" basedir="${test_classes}">
+		<jar destfile="${test.dist}/${tests.jar}" basedir="${test_classes}" modificationTime="${archive.entry.date}">
 			<include name="**/*" />
 		</jar>
 	</target>
-	
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath path="lib/ant/jacocoant.jar"/>
-	</taskdef>
-	
+
+	<path id="jacoco.classpath">
+		<fileset dir="lib/ant">
+			<include name="org.jacoco.ant-0.8.8.jar"/>
+			<include name="org.jacoco.core-0.8.8.jar"/>
+			<include name="org.jacoco.report-0.8.8.jar"/>
+			<include name="org.jacoco.agent-0.8.8.jar"/>
+			<include name="asm-9.2.jar"/>
+			<include name="asm-tree-9.2.jar"/>
+			<include name="asm-commons-9.2.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef uri="antlib:org.jacoco.ant"
+			 resource="org/jacoco/ant/antlib.xml"
+			 classpathref="jacoco.classpath"/>
+
+	<target name="test-coverage" depends="test-compile">
+		<description>Run unit tests WITH JaCoCo coverage.</description>
+
+		<delete dir="${jacoco.data.dir}" />
+		<delete dir="${reports.jacoco.dir}" />
+
+		<jacoco:agent property="jacoco.agent.arg"
+					destfile="${jacoco.exec.file}"
+					exclclassloader="sun.reflect.DelegatingClassLoader:javassist.Loader" />
+
+		<antcall target="test-run" />
+
+		<jacoco:report>
+			<executiondata>
+				<file file="${jacoco.exec.file}" />
+			</executiondata>
+			<structure name="${ant.project.name}">
+				<classfiles>
+					<fileset dir="${classes}" />
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${src}" />
+				</sourcefiles>
+			</structure>
+			<html destdir="${reports.jacoco.html}" />
+			<xml destfile="${reports.jacoco.xml}"/>
+		</jacoco:report>
+	</target>
+
 	<target name="test-run" depends="test-compile">
-		<property name="junit-reports" value="junit-reports" />
-		<property name="code-coverage-reports" value="code-coverage-reports" />
-		<mkdir dir="${junit-reports}" />
-		<mkdir dir="${code-coverage-reports}" />
-		
-		<jacoco:coverage destfile="${code-coverage-reports}/jacoco.exec" xmlns:jacoco="antlib:org.jacoco.ant" exclclassloader="sun.reflect.DelegatingClassLoader:javassist.Loader" >
-			<junit haltonfailure="false" fork="true" forkmode="once">
-				<jvmarg value="-Xms128m" />
-				<jvmarg value="-Xmx2048m" />
-				<!-- Uncomment the following and add additional dashes in front of the arguments to allow Java 9+
-					<jvmarg value="-add-opens=java.base/java.util=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.base/java.lang=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.base/java.lang.reflect=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.base/java.text=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.desktop/java.awt=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.desktop/java.awt.font=ALL-UNNAMED" />
-					<jvmarg value="-add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED" />
-				-->
-				<classpath>
-					<path refid="testclasspath" />
-					<dirset dir="${test_classes}"/>
-				</classpath>
-				<formatter type="xml" />
-				<batchtest todir="${junit-reports}">
-					<fileset dir="${test_classes}">
-						<include name="**/*Test.class" />
-					</fileset>
-				</batchtest>
-			</junit>
-		</jacoco:coverage>
+		<description>Run unit tests. Coverage is only enabled if 'jacoco.agent.arg' is set.</description>
+
+		<delete dir="${test.results.dir}" />
+		<delete dir="${reports.tests.dir}" />
+		<mkdir dir="${test.results.dir}" />
+		<mkdir dir="${reports.tests.dir}" />
+
+		<junit haltonfailure="false"
+				failureproperty="test.failed"
+				errorproperty="test.failed"
+				fork="true"
+				forkmode="once">
+
+			<jvmarg value="-Xms128m" />
+			<jvmarg value="-Xmx2048m" />
+			<!-- https://stackoverflow.com/questions/54205486 -->
+			<jvmarg value="-Xshare:off" />
+			<jvmarg value="--add-exports=java.base/com.sun.crypto.provider=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.base/java.util=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.base/java.lang.reflect=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.base/java.text=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.desktop/java.awt=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.desktop/java.awt.font=ALL-UNNAMED" />
+			<jvmarg value="--add-opens=java.sql/java.sql=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.sql.rowset/com.sun.rowset=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.sql.rowset/com.sun.rowset.internal=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.sql.rowset/com.sun.rowset.providers=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.sql.rowset/javax.sql.rowset=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED" />
+			<jvmarg line="${jacoco.agent.arg}" if:set="jacoco.agent.arg" />
+
+			<classpath>
+				<path refid="testclasspath" />
+				<dirset dir="${test_classes}"/>
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest todir="${test.results.dir}">
+				<fileset dir="${test_classes}">
+					<include name="**/*Test.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<!-- Generate HTML report from JUnit XML output -->
+		<junitreport todir="${test.results.dir}">
+			<fileset dir="${test.results.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${reports.tests.dir}" />
+		</junitreport>
+
+		<fail if="test.failed" message="Unit tests failed. For details, check reports in ${reports.tests.dir}."/>
 	</target>
 	
 	<target name="remove-classes" depends="init">

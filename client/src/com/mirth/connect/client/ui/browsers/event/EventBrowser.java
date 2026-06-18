@@ -207,7 +207,7 @@ public class EventBrowser extends javax.swing.JPanel {
     }
 
     private Calendar getCalendar(MirthDatePicker datePicker, MirthTimePicker timePicker) throws ParseException {
-        DateFormatter timeFormatter = new DateFormatter(new SimpleDateFormat("hh:mm aa"));
+        DateFormatter timeFormatter = new DateFormatter(new SimpleDateFormat("HH:mm"));
         Date date = datePicker.getDate();
         String time = timePicker.getDate();
 
@@ -476,7 +476,7 @@ public class EventBrowser extends javax.swing.JPanel {
                         updateEventTable(events);
 
                         if (!events.hasNextPage()) {
-                            events.setItemCount(new Long(((retrievedPageNumber - 1) * events.getPageSize()) + events.size()));
+                            events.setItemCount(Long.valueOf(((retrievedPageNumber - 1) * events.getPageSize()) + events.size()));
                             enableCountButton = false;
                         }
                     } else {
@@ -485,7 +485,7 @@ public class EventBrowser extends javax.swing.JPanel {
                             model.refreshDataVector(new Object[0][0]);
                         }
 
-                        events.setItemCount(new Long((retrievedPageNumber - 1) * events.getPageSize()));
+                        events.setItemCount(Long.valueOf((retrievedPageNumber - 1) * events.getPageSize()));
                         enableCountButton = false;
                         pageNumberField.setText("0");
                     }
@@ -909,8 +909,8 @@ public class EventBrowser extends javax.swing.JPanel {
         endDatePicker = new com.mirth.connect.client.ui.components.MirthDatePicker();
         startDatePicker = new com.mirth.connect.client.ui.components.MirthDatePicker();
         nameField = new javax.swing.JTextField();
-        startTimePicker = new com.mirth.connect.client.ui.components.MirthTimePicker();
-        endTimePicker = new com.mirth.connect.client.ui.components.MirthTimePicker();
+        startTimePicker = new com.mirth.connect.client.ui.components.MirthTimePicker("HH:mm", Calendar.MINUTE);
+        endTimePicker = new com.mirth.connect.client.ui.components.MirthTimePicker("HH:mm", Calendar.MINUTE);
         filterButton = new javax.swing.JButton();
         advSearchButton = new javax.swing.JButton();
         levelBoxInformation = new com.mirth.connect.client.ui.components.MirthCheckBox();

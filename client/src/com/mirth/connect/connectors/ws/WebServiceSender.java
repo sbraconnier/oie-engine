@@ -37,7 +37,6 @@ import java.util.prefs.Preferences;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -83,9 +82,11 @@ import com.mirth.connect.util.ConnectionTestResponse;
 
 public class WebServiceSender extends ConnectorSettingsPanel {
 
-    protected static final ImageIcon ICON_LOCK_X = new ImageIcon(Frame.class.getResource("images/lock_x.png"));
     protected static final Color COLOR_SSL_NOT_CONFIGURED = new Color(0xFFF099);
-    protected static final String SSL_TOOL_TIP = "<html>The default system certificate store will be used for this connection.<br/>As a result, certain security options are not available and mutual<br/>authentication (two-way authentication) is not supported.</html>";
+    protected static final String SSL_TOOL_TIP = """
+        <html>Compatible TLS plugin not detected. The java system trust store will be<br/>
+        used for this connection. TLS security options and mutual<br/>
+        authentication (mTLS) are not configurable through this interface.</html>""";
 
     private final int ID_COLUMN_NUMBER = 0;
     private final int CONTENT_COLUMN_NUMBER = 1;
@@ -319,7 +320,7 @@ public class WebServiceSender extends ConnectorSettingsPanel {
     @Override
     public ConnectorTypeDecoration getConnectorTypeDecoration() {
         if (isUsingHttps(wsdlUrlField.getText()) || isUsingHttps(String.valueOf(locationURIComboBox.getSelectedItem()))) {
-            return new ConnectorTypeDecoration(Mode.DESTINATION, "(SSL Not Configured)", ICON_LOCK_X, SSL_TOOL_TIP, sslWarningPanel, COLOR_SSL_NOT_CONFIGURED);
+            return new ConnectorTypeDecoration(Mode.DESTINATION, "(TLS Not Configured)", UIConstants.ICON_INFORMATION, SSL_TOOL_TIP, null, COLOR_SSL_NOT_CONFIGURED);
         } else {
             return new ConnectorTypeDecoration(Mode.DESTINATION);
         }
@@ -963,8 +964,6 @@ public class WebServiceSender extends ConnectorSettingsPanel {
             }
         });
 
-        sslWarningPanel = new SSLWarningPanel();
-
         useAttachmentsTableRadio = new MirthRadioButton("Use Table");
         useAttachmentsTableRadio.setBackground(getBackground());
         useAttachmentsTableRadio.addActionListener(new ActionListener() {
@@ -1505,5 +1504,4 @@ public class WebServiceSender extends ConnectorSettingsPanel {
     protected MirthTextField attachmentsVariableField;
     protected MirthRadioButton useAttachmentsTableRadio;
     protected MirthRadioButton useAttachmentsVariableRadio;
-    protected SSLWarningPanel sslWarningPanel;
 }

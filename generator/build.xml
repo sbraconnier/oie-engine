@@ -1,10 +1,13 @@
-<project name="mirth-vocab-generator" basedir="." default="dist-vocab">
+<project name="mirth-vocab-generator" basedir="." default="dist-vocab" xmlns:unless="ant:unless">
 	<target name="init">
 		<property file="build.properties" />
 
 		<path id="build.classpath">
 			<fileset dir="${generator.lib}" includes="*.jar" />
 		</path>
+
+		<fail message="Required property archive.entry.date is not set"
+			unless:set="archive.entry.date" />
 	</target>
 
 	<target name="clean" depends="init">
@@ -20,7 +23,7 @@
 
 	<target name="dist-generator" depends="compile-generator">
 		<mkdir dir="${generator.dist}" />
-		<jar destfile="${generator.dist}/${generator.jar}" basedir="${generator.classes}" />
+		<jar destfile="${generator.dist}/${generator.jar}" basedir="${generator.classes}" modificationTime="${archive.entry.date}" />
 	</target>
 
 	<target name="generate-vocab-source" depends="dist-generator">
@@ -47,7 +50,7 @@
 
 	<target name="dist-vocab" depends="compile-vocab">
 		<mkdir dir="${vocab.dist}" />
-		<jar destfile="${vocab.dist}/${vocab.jar}">
+		<jar destfile="${vocab.dist}/${vocab.jar}" modificationTime="${archive.entry.date}">
 			<fileset dir="${vocab.classes}" />
 			<fileset dir="${generator.classes}" includes="**/hl7v2/**/*.class" />
 		</jar>

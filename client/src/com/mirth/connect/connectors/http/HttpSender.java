@@ -31,7 +31,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -74,9 +73,11 @@ import com.mirth.connect.util.ConnectionTestResponse;
 
 public class HttpSender extends ConnectorSettingsPanel {
 
-    private static final ImageIcon ICON_LOCK_X = new ImageIcon(Frame.class.getResource("images/lock_x.png"));
     private static final Color COLOR_SSL_NOT_CONFIGURED = new Color(0xFFF099);
-    private static final String SSL_TOOL_TIP = "<html>The default system certificate store will be used for this connection.<br/>As a result, certain security options are not available and mutual<br/>authentication (two-way authentication) is not supported.</html>";
+    private static final String SSL_TOOL_TIP = """
+        <html>Compatible TLS plugin not detected. The java system trust store will be<br/>
+        used for this connection. TLS security options and mutual<br/>
+        authentication (mTLS) are not configurable through this interface.</html>""";
 
     private final int NAME_COLUMN = 0;
     private final int VALUE_COLUMN = 1;
@@ -85,7 +86,6 @@ public class HttpSender extends ConnectorSettingsPanel {
     private int propertiesLastIndex = -1;
     private int headerLastIndex = -1;
     private Frame parent;
-    private SSLWarningPanel sslWarningPanel;
 
     public HttpSender() {
         this.parent = PlatformUI.MIRTH_FRAME;
@@ -113,8 +113,6 @@ public class HttpSender extends ConnectorSettingsPanel {
                 urlFieldChanged();
             }
         });
-
-        sslWarningPanel = new SSLWarningPanel();
 
         contentTypeField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -691,7 +689,7 @@ public class HttpSender extends ConnectorSettingsPanel {
         }
 
         if (usingHttps) {
-            return new ConnectorTypeDecoration(Mode.DESTINATION, "(SSL Not Configured)", ICON_LOCK_X, SSL_TOOL_TIP, sslWarningPanel, COLOR_SSL_NOT_CONFIGURED);
+            return new ConnectorTypeDecoration(Mode.DESTINATION, "(TLS Not Configured)", UIConstants.ICON_INFORMATION, SSL_TOOL_TIP, null, COLOR_SSL_NOT_CONFIGURED);
         } else {
             return new ConnectorTypeDecoration(Mode.DESTINATION);
         }

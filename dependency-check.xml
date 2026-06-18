@@ -24,7 +24,7 @@
 	                      reportoutputdirectory="${basedir}"
 	                      reportformat="HTML">
 	        <suppressionfile path="${dependency-check.home}/suppression.xml" />
-	        <multirootfileset basedirs="${basedir}/server/lib,${basedir}/donkey/lib,${basedir}/client/lib,${basedir}/command/lib,${basedir}/manager/lib">
+	        <multirootfileset basedirs="${basedir}/server/lib,${basedir}/donkey/lib,${basedir}/client/lib,${basedir}/command/lib">
 	            <include name="**/*.jar"/>
 	        </multirootfileset>
 	    </dependency-check>

@@ -36,12 +36,12 @@ public class MirthBlankableSpinnerModel extends AbstractSpinnerModel {
 
     @Override
     public Object getNextValue() {
-        return (value.equals("")) ? startValue : min(new Integer(value.toString()) + 1, maximum);
+        return (value.equals("")) ? startValue : min(Integer.valueOf(value.toString()) + 1, maximum);
     }
 
     @Override
     public Object getPreviousValue() {
-        return (value.equals("")) ? startValue : max(new Integer(value.toString()) - 1, minimum);
+        return (value.equals("")) ? startValue : max(Integer.valueOf(value.toString()) - 1, minimum);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MirthBlankableSpinnerModel extends AbstractSpinnerModel {
             value = null;
         } else {
             try {
-                value = new Integer(object.toString());
+                value = Integer.valueOf(object.toString());
 
                 if (minimum != null && (Integer) value < minimum) {
                     value = minimum;

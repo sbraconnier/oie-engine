@@ -1,11 +1,5 @@
-/*
- * Copyright (c) Mirth Corporation. All rights reserved.
- * 
- * http://www.mirthcorp.com
- * 
- * The software in this package is published under the terms of the MPL license a copy of which has
- * been included with this distribution in the LICENSE.txt file.
- */
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Mirth Corporation
 
 package com.mirth.connect.client.ui;
 
@@ -259,59 +253,18 @@ public class Mirth {
      *            String[]
      */
     public static void main(String[] args) {
-        String server = "https://localhost:8443";
-        String version = "";
-        String username = "";
-        String password = "";
-        String protocols = "";
-        String cipherSuites = "";
+        CommandLineOptions opts = new CommandLineOptions(args);
 
-        if (args.length > 0) {
-            server = args[0];
+        if (StringUtils.isNotBlank(opts.getProtocols())) {
+            PlatformUI.HTTPS_PROTOCOLS = StringUtils.split(opts.getProtocols(), ',');
         }
-        if (args.length > 1) {
-            version = args[1];
+        if (StringUtils.isNotBlank(opts.getCipherSuites())) {
+            PlatformUI.HTTPS_CIPHER_SUITES = StringUtils.split(opts.getCipherSuites(), ',');
         }
-        if (args.length > 2) {
-            if (StringUtils.equalsIgnoreCase(args[2], "-ssl")) {
-                // <server> <version> -ssl [<protocols> [<ciphersuites> [<username> [<password>]]]]
-                if (args.length > 3) {
-                    protocols = args[3];
-                }
-                if (args.length > 4) {
-                    cipherSuites = args[4];
-                }
-                if (args.length > 5) {
-                    username = args[5];
-                }
-                if (args.length > 6) {
-                    password = args[6];
-                }
-            } else {
-                // <server> <version> <username> [<password> [-ssl [<protocols> [<ciphersuites>]]]]
-                username = args[2];
-                if (args.length > 3) {
-                    password = args[3];
-                }
-                if (args.length > 4 && StringUtils.equalsIgnoreCase(args[4], "-ssl")) {
-                    if (args.length > 5) {
-                        protocols = args[5];
-                    }
-                    if (args.length > 6) {
-                        cipherSuites = args[6];
-                    }
-                }
-            }
-        }
+        PlatformUI.SERVER_URL = opts.getServer();
+        PlatformUI.CLIENT_VERSION = opts.getVersion();
 
-        if (StringUtils.isNotBlank(protocols)) {
-            PlatformUI.HTTPS_PROTOCOLS = StringUtils.split(protocols, ',');
-        }
-        if (StringUtils.isNotBlank(cipherSuites)) {
-            PlatformUI.HTTPS_CIPHER_SUITES = StringUtils.split(cipherSuites, ',');
-        }
-
-        start(server, version, username, password);
+        start(opts.getServer(), opts.getVersion(), opts.getUsername(), opts.getPassword());
     }
 
     private static void start(final String server, final String version, final String username, final String password) {

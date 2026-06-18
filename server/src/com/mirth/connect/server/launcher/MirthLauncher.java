@@ -40,11 +40,12 @@ public class MirthLauncher {
     private static final String EXTENSIONS_DIR = "./extensions";
     private static final String SERVER_LAUNCHER_LIB_DIR = "./server-launcher-lib";
     private static final String MIRTH_PROPERTIES_FILE = "./conf/mirth.properties";
+    private static final String LOG4J_PROPERTIES_FILE = "./conf/log4j2.properties";
     private static final String PROPERTY_APP_DATA_DIR = "dir.appdata";
     private static final String PROPERTY_INCLUDE_CUSTOM_LIB = "server.includecustomlib";
-    private static final String[] LOG4J_JAR_FILES = { "./server-lib/log4j/log4j-core-2.17.2.jar",
-            "./server-lib/log4j/log4j-api-2.17.2.jar",
-            "./server-lib/log4j/log4j-1.2-api-2.17.2.jar" };
+    private static final String[] LOG4J_JAR_FILES = { "./server-lib/log4j/log4j-core-2.25.3.jar",
+            "./server-lib/log4j/log4j-api-2.25.3.jar",
+            "./server-lib/log4j/log4j-1.2-api-2.25.3.jar" };
 
     private static String appDataDir = null;
 
@@ -53,6 +54,8 @@ public class MirthLauncher {
     public static void main(String[] args) {
         JarFile mirthClientCoreJarFile = null;
         try {
+            Log4jMigrations.migrateConfiguration(new File(LOG4J_PROPERTIES_FILE));
+
             List<URL> classpathUrls = new ArrayList<>();
             // Always add log4j
             for (String log4jJar : LOG4J_JAR_FILES) {
